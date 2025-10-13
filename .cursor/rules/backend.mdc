@@ -1,0 +1,36 @@
+---
+globs: backend/*
+alwaysApply: false
+---
+
+# AI Rules for 10x-certificaton/backend
+
+## Tech Stack
+
+- Go 1.25.1
+- GORM 1.31.0
+- Gin 1.11.0
+
+## Backend
+
+### Guidelines for GO
+
+#### GIN
+
+- Use middleware for cross-cutting concerns like authentication, logging, and request validation
+- Implement structured logging with context for better debugging of {{error_scenarios}}
+- Use binding validation for request payloads with custom validators for complex business rules
+- Apply the context package properly to manage request-scoped values and cancellation signals
+- Implement proper error handling with custom error types and consistent HTTP status codes
+- Use the gin.H map for JSON responses consistently across handlers for {{api_endpoints}}
+
+
+## DATABASE
+
+### Guidelines for SQL
+
+#### POSTGRES
+
+- Use connection pooling to manage database connections efficiently
+- Implement JSONB columns for semi-structured data instead of creating many tables for {{flexible_data}}
+- Use materialized views for complex, frequently accessed read-only data
