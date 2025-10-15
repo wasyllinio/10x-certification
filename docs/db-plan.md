@@ -137,7 +137,7 @@ CREATE TABLE connectors (
 ```sql
 CREATE TABLE evse (
     id UUID PRIMARY KEY,
-    evse_id VARCHAR(50) NOT NULL CHECK (evse_id ~ '^[A-Z]{2}\*[A-Z0-9]{3}+\*E[A-Z0-9\*]+$'),
+    evse_id VARCHAR(50) NOT NULL CHECK (evse_id ~ '^[A-Z]{2}\*[A-Z0-9]{3}\*E[A-Z0-9\*]+$'),
     connector_id UUID UNIQUE NOT NULL REFERENCES connectors(id) ON DELETE CASCADE,
     location_id UUID NOT NULL REFERENCES locations(id) ON DELETE CASCADE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),

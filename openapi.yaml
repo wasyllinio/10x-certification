@@ -1,0 +1,978 @@
+openapi: 3.1.0
+info:
+  title: EV Charging Station Management API
+  description: REST API for managing electric vehicle charging stations, locations, and EVSE points
+  version: 0.1.0
+  contact:
+    name: ECSM API Support
+    email: support@example.com
+
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Development server
+
+security:
+  - bearerAuth: []
+
+paths:
+  # Authentication endpoints
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Register a new user account
+      description: Create a new user account with email and password
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+            examples:
+              example1:
+                summary: New user registration
+                value:
+                  email: "user@example.com"
+                  password: "securepassword123"
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '409':
+          $ref: '#/components/responses/ConflictError'
+
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Authenticate user and get JWT token
+      description: Login with email and password to receive JWT token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            examples:
+              example1:
+                summary: User login
+                value:
+                  email: "user@example.com"
+                  password: "securepassword123"
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  # Charger endpoints
+  /chargers:
+    get:
+      tags:
+        - Chargers
+      summary: List charging stations
+      description: Get paginated list of charging stations with search and filtering
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: Items per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: search
+          in: query
+          description: Search in vendor, model, serial_number
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Filter by status
+          schema:
+            type: string
+            enum: [warehouse, assigned]
+        - name: location_id
+          in: query
+          description: Filter by location ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: List of charging stations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChargerListResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+    post:
+      tags:
+        - Chargers
+      summary: Create a new charging station
+      description: Create a new charging station with connectors
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateChargerRequest'
+            examples:
+              example1:
+                summary: Tesla Supercharger V3
+                value:
+                  vendor: "Tesla"
+                  model: "Supercharger V3"
+                  serial_number: "TS001"
+                  connectors:
+                    - connector_id: 1
+                      power: 250.0
+                      voltage: 400
+                      amperage: 625
+                      connector_type: "CCS"
+                      connector_standard: "DC"
+      responses:
+        '201':
+          description: Charging station created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateChargerResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '409':
+          $ref: '#/components/responses/ConflictError'
+
+  /chargers/{id}:
+    get:
+      tags:
+        - Chargers
+      summary: Get charging station details
+      description: Get detailed information about a specific charging station
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Charging station ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Charging station details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChargerDetail'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+    put:
+      tags:
+        - Chargers
+      summary: Update charging station
+      description: Update charging station with optimistic locking
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Charging station ID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateChargerRequest'
+      responses:
+        '200':
+          description: Charging station updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChargerDetail'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '409':
+          $ref: '#/components/responses/VersionConflictError'
+
+    delete:
+      tags:
+        - Chargers
+      summary: Delete charging station
+      description: Soft delete charging station (cannot delete if assigned to location)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Charging station ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Charging station deleted successfully
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  # Location endpoints
+  /locations:
+    get:
+      tags:
+        - Locations
+      summary: List locations
+      description: Get paginated list of locations with search and filtering
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: Items per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: search
+          in: query
+          description: Search in name, address
+          schema:
+            type: string
+        - name: country_code
+          in: query
+          description: Filter by country code
+          schema:
+            type: string
+            pattern: '^[A-Z]{3}$'
+      responses:
+        '200':
+          description: List of locations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationListResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+    post:
+      tags:
+        - Locations
+      summary: Create a new location
+      description: Create a new location for charging stations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLocationRequest'
+            examples:
+              example1:
+                summary: Downtown charging hub
+                value:
+                  name: "Downtown Charging Hub"
+                  address: "123 Main St, City"
+                  country_code: "USA"
+      responses:
+        '201':
+          description: Location created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationDetail'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /locations/{id}:
+    get:
+      tags:
+        - Locations
+      summary: Get location details
+      description: Get detailed information about a specific location
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Location ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Location details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationDetail'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+    put:
+      tags:
+        - Locations
+      summary: Update location
+      description: Update location with optimistic locking
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Location ID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateLocationRequest'
+      responses:
+        '200':
+          description: Location updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationDetail'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '409':
+          $ref: '#/components/responses/VersionConflictError'
+
+    delete:
+      tags:
+        - Locations
+      summary: Delete location
+      description: Soft delete location (requires no assigned chargers)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Location ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Location deleted successfully
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  /locations/{id}/assign-charger:
+    put:
+      tags:
+        - Locations
+      summary: Assign charger to location
+      description: Assign a charger to a location (triggers EVSE generation)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Location ID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignChargerRequest'
+            examples:
+              example1:
+                summary: Assign charger to location
+                value:
+                  charger_id: "550e8400-e29b-41d4-a716-446655440000"
+      responses:
+        '200':
+          description: Charger assigned successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Charger assigned successfully"
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  /locations/{id}/chargers/{charger_id}:
+    delete:
+      tags:
+        - Locations
+      summary: Detach charger from location
+      description: Remove a charger from a location
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Location ID
+          schema:
+            type: string
+            format: uuid
+        - name: charger_id
+          in: path
+          required: true
+          description: Charger ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Charger detached successfully
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+
+  /locations/{id}/chargers:
+    get:
+      tags:
+        - Locations
+      summary: Get chargers assigned to location
+      description: Get all chargers assigned to a specific location
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Location ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: List of chargers assigned to location
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ChargerDetail'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  /locations/{id}/evse:
+    get:
+      tags:
+        - Locations
+      summary: Get EVSE points for location
+      description: Get all EVSE points for a specific location
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Location ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: List of EVSE points for location
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EVSEListResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    # Authentication schemas
+    RegisterRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          description: User email address
+        password:
+          type: string
+          minLength: 8
+          description: User password (minimum 8 characters)
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+
+    LoginResponse:
+      type: object
+      required:
+        - token
+      properties:
+        token:
+          type: string
+          description: JWT token for authentication
+
+    # Charger schemas
+    Connector:
+      type: object
+      required:
+        - connector_id
+        - power
+        - voltage
+        - amperage
+        - connector_type
+        - connector_standard
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Connector ID
+        connector_id:
+          type: integer
+          description: Connector number on the charger
+        power:
+          type: number
+          format: float
+          minimum: 0
+          description: Power in kW
+        voltage:
+          type: integer
+          minimum: 0
+          description: Voltage in V
+        amperage:
+          type: integer
+          minimum: 0
+          description: Amperage in A
+        connector_type:
+          type: string
+          enum: [CCS, Type2, Chademo]
+          description: Type of connector
+        connector_standard:
+          type: string
+          enum: [AC_1P, AC_3P, DC]
+          description: Connector standard
+
+    CreateChargerRequest:
+      type: object
+      required:
+        - vendor
+        - model
+        - serial_number
+        - connectors
+      properties:
+        vendor:
+          type: string
+          description: Charger vendor/manufacturer
+        model:
+          type: string
+          description: Charger model
+        serial_number:
+          type: string
+          description: Unique serial number
+        connectors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Connector'
+          minItems: 1
+          description: List of connectors for this charger
+
+    UpdateChargerRequest:
+      allOf:
+        - $ref: '#/components/schemas/CreateChargerRequest'
+        - type: object
+          required:
+            - version
+          properties:
+            version:
+              type: integer
+              minimum: 1
+              description: Current version for optimistic locking
+
+    CreateChargerResponse:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Created charger ID
+
+    ChargerDetail:
+      type: object
+      required:
+        - id
+        - vendor
+        - model
+        - serial_number
+        - connectors
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        vendor:
+          type: string
+        model:
+          type: string
+        serial_number:
+          type: string
+        owner_id:
+          type: string
+          format: uuid
+        location_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+          enum: [warehouse, assigned]
+        connectors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Connector'
+        created_at:
+          type: string
+          format: date-time
+
+    ChargerListResponse:
+      type: object
+      required:
+        - data
+        - pagination
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChargerDetail'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    # Location schemas
+    CreateLocationRequest:
+      type: object
+      required:
+        - name
+        - address
+        - country_code
+      properties:
+        name:
+          type: string
+          description: Location name
+        address:
+          type: string
+          description: Full address
+        country_code:
+          type: string
+          pattern: '^[A-Z]{3}$'
+          description: ISO 3166-1 alpha-3 country code
+
+    UpdateLocationRequest:
+      allOf:
+        - $ref: '#/components/schemas/CreateLocationRequest'
+        - type: object
+          required:
+            - version
+          properties:
+            version:
+              type: integer
+              minimum: 1
+              description: Current version for optimistic locking
+
+    LocationDetail:
+      type: object
+      required:
+        - id
+        - name
+        - address
+        - country_code
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        address:
+          type: string
+        country_code:
+          type: string
+        owner_id:
+          type: string
+          format: uuid
+        chargers_count:
+          type: integer
+          description: Number of chargers at this location
+        evse_count:
+          type: integer
+          description: Number of EVSE points at this location
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        chargers:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChargerDetail'
+          description: Chargers assigned to this location
+        evses:
+          type: array
+          items:
+            $ref: '#/components/schemas/EVSE'
+          description: EVSE points at this location
+
+    LocationListResponse:
+      type: object
+      required:
+        - data
+        - pagination
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationDetail'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    AssignChargerRequest:
+      type: object
+      required:
+        - charger_id
+      properties:
+        charger_id:
+          type: string
+          format: uuid
+          description: ID of charger to assign
+
+    # EVSE schemas
+    EVSE:
+      type: object
+      required:
+        - id
+        - evse_id
+        - connector
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        evse_id:
+          type: string
+          pattern: '^[A-Z]{2}\*[A-Z0-9]{3}\*E[A-Z0-9\*]+$'
+          maxLength: 40
+          description: EVSE ID according to Emi3spec format
+        connector:
+          $ref: '#/components/schemas/Connector'
+        created_at:
+          type: string
+          format: date-time
+
+    EVSEListResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/EVSE'
+
+    # Common schemas
+    Pagination:
+      type: object
+      required:
+        - page
+        - limit
+        - total
+        - has_next
+      properties:
+        page:
+          type: integer
+          description: Current page number
+        limit:
+          type: integer
+          description: Items per page
+        total:
+          type: integer
+          description: Total number of items
+        has_next:
+          type: boolean
+          description: Whether there are more pages
+
+    Error:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error type
+        message:
+          type: string
+          description: Error message
+        details:
+          type: object
+          description: Additional error details
+
+  responses:
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "validation_error"
+            message: "Invalid input data"
+            details:
+              field: "email"
+              issue: "Invalid email format"
+
+    UnauthorizedError:
+      description: Unauthorized access
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "unauthorized"
+            message: "Invalid or missing authentication token"
+
+    ForbiddenError:
+      description: Access forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "forbidden"
+            message: "Access denied to this resource"
+
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "not_found"
+            message: "Resource not found"
+
+    ConflictError:
+      description: Resource conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "conflict"
+            message: "Resource already exists"
+
+    VersionConflictError:
+      description: Version conflict (optimistic locking)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "version_conflict"
+            message: "Resource was modified by another user"
+
+tags:
+  - name: Authentication
+    description: User authentication and authorization
+  - name: Chargers
+    description: Charging station management
+  - name: Locations
+    description: Location and EVSE management
