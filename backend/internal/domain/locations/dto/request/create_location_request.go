@@ -1,0 +1,17 @@
+package request
+
+// CreateLocationRequest represents the request to create a new location
+type CreateLocationRequest struct {
+	Name        string `json:"name" validate:"required"`
+	Address     string `json:"address" validate:"required"`
+	CountryCode string `json:"country_code" validate:"required,len=3,regexp=^[A-Z]{3}$"`
+}
+
+// NewCreateLocationRequest creates a new CreateLocationRequest
+func NewCreateLocationRequest(name, address, countryCode string) *CreateLocationRequest {
+	return &CreateLocationRequest{
+		Name:        name,
+		Address:     address,
+		CountryCode: countryCode,
+	}
+}

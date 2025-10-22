@@ -13,6 +13,8 @@ alwaysApply: false
 
 ## Backend
 
+- Written in use DDD + CQRS pattern
+
 ### Guidelines for GO
 
 #### GIN
