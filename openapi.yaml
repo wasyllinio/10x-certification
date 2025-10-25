@@ -2,7 +2,7 @@ openapi: 3.0.4
 info:
   title: EV Charging Station Management API
   description: REST API for managing electric vehicle charging stations, locations, and EVSE points
-  version: 0.1.0
+  version: 0.2.0
   contact:
     name: ECSM API Support
     email: support@example.com
@@ -324,7 +324,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LocationDetail'
+                $ref: '#/components/schemas/CreateLocationResponse'
         '400':
           $ref: '#/components/responses/ValidationError'
         '401':
@@ -451,11 +451,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Charger assigned successfully"
+                $ref: '#/components/schemas/LocationDetail'
         '400':
           $ref: '#/components/responses/ValidationError'
         '401':
@@ -546,7 +542,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EVSEListResponse'
+                type: array
+                items:
+                  $ref: '#/components/schemas/EVSE'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
         '403':
@@ -688,25 +686,18 @@ components:
     ChargerDetail:
       type: object
       required:
-        - id
         - vendor
         - model
         - serial_number
         - connectors
         - created_at
       properties:
-        id:
-          type: string
-          format: uuid
         vendor:
           type: string
         model:
           type: string
         serial_number:
           type: string
-        owner_id:
-          type: string
-          format: uuid
         location_id:
           type: string
           format: uuid
@@ -754,6 +745,16 @@ components:
           pattern: '^[A-Z]{3}$'
           description: ISO 3166-1 alpha-3 country code
 
+    CreateLocationResponse:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Created location ID
+
     UpdateLocationRequest:
       allOf:
         - $ref: '#/components/schemas/CreateLocationRequest'
@@ -785,9 +786,6 @@ components:
           type: string
         country_code:
           type: string
-        owner_id:
-          type: string
-          format: uuid
         chargers_count:
           type: integer
           description: Number of chargers at this location
@@ -803,13 +801,40 @@ components:
         chargers:
           type: array
           items:
-            $ref: '#/components/schemas/ChargerDetail'
+            $ref: '#/components/schemas/LocationChargerDetail'
           description: Chargers assigned to this location
         evses:
           type: array
           items:
             $ref: '#/components/schemas/EVSE'
           description: EVSE points at this location
+    
+    LocationChargerDetail:
+      type: object
+      required:
+        - id
+        - vendor
+        - model
+        - serial_number
+        - connectors
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        vendor:
+          type: string
+        model:
+          type: string
+        serial_number:
+          type: string
+        connectors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Connector'
+        created_at:
+          type: string
+          format: date-time
 
     LocationListResponse:
       type: object
@@ -856,16 +881,6 @@ components:
         created_at:
           type: string
           format: date-time
-
-    EVSEListResponse:
-      type: object
-      required:
-        - data
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/EVSE'
 
     # Common schemas
     Pagination:

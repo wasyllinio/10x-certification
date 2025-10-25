@@ -82,17 +82,12 @@
       "model": "Supercharger V3",
       "serial_number": "TS001",
       "owner_id": "uuid",
-      "location_id": "uuid",
+      "location_id": "uuid", // nullable
       "status": "assigned",
       "connectors": [
         {
-          "id": "uuid",
-          "connector_id": 1,
           "power": 250.0,
-          "voltage": 400,
-          "amperage": 625,
-          "connector_type": "CCS",
-          "connector_standard": "DC"
+          "connector_type": "CCS"
         }
       ],
       "created_at": "2025-01-01T00:00:00Z"
@@ -128,7 +123,7 @@
   ]
 }
 ```
-- **Response** (200 Created):
+- **Response** (201 Created):
 ```json
 {
   "id": "uuid"
@@ -141,13 +136,13 @@
 - **Response** (200 OK):
 ```json
 {
-  "id": "uuid",
   "vendor": "Tesla",
   "model": "Supercharger V3",
   "serial_number": "TS001",
   "location_id": "uuid", // nullable
   "connectors": [
     {
+      "id": "uuid",
       "connector_id": 1,
       "power": 250.0,
       "voltage": 400,
@@ -169,10 +164,39 @@
   "model": "Supercharger V4",
   "serial_number": "TS001",
   "version": 1,
-  "connectors": [...]
+  "connectors": [
+    {
+      "id": "uuid", // nullable
+      "connector_id": 1,
+      "power": 250.0,
+      "voltage": 400,
+      "amperage": 625,
+      "connector_type": "CCS",
+      "connector_standard": "DC"
+    }
+  ]
 }
 ```
-- **Response** (204 OK): Updated charger object
+- **Response** (200 OK):
+```json
+{
+  "vendor": "Tesla",
+  "model": "Supercharger V3",
+  "serial_number": "TS001",
+  "location_id": "uuid", // nullable
+  "connectors": [
+    {
+      "id": "uuid",
+      "connector_id": 1,
+      "power": 250.0,
+      "voltage": 400,
+      "amperage": 625,
+      "connector_type": "CCS",
+      "connector_standard": "DC"
+    }
+  ]
+}
+```
 - **Error Codes**: 400 (validation error), 401 (unauthorized), 403 (access denied), 404 (not found), 409 (version conflict)
 
 #### DELETE /chargers/{id}
@@ -220,7 +244,12 @@
   "country_code": "USA"
 }
 ```
-- **Response** (201 Created): Location object
+- **Response** (201 Created):
+```json
+{
+  "id": "uuid"
+}
+```
 - **Error Codes**: 400 (validation error), 401 (unauthorized)
 
 #### GET /locations/{id}
@@ -232,8 +261,41 @@
   "address": "New Address",
   "country_code": "USA",
   "version": 1,
-  "chargers": [...],
-  "evses": [...]
+  "chargers": [
+    {
+      "id": "uuid",
+      "vendor": "Tesla",
+      "model": "Supercharger V3",
+      "serial_number": "TS001",
+      "connectors": [
+        {
+          "id": "uuid",
+          "connector_id": 1,
+          "power": 250.0,
+          "voltage": 400,
+          "amperage": 625,
+          "connector_type": "CCS",
+          "connector_standard": "DC"
+        }
+      ]
+    }
+  ],
+  "evses": [
+    {
+      "id": "uuid",
+      "evse_id": "string",
+      "connector": {
+        "id": "uuid",
+        "connector_id": 1,
+        "power": 250.0,
+        "voltage": 400,
+        "amperage": 625,
+        "connector_type": "CCS",
+        "connector_standard": "DC"
+      },
+      "created_at": "2025-01-01T00:00:00Z",
+    }
+  ]
 }
 ```
 - **Error Codes**: 401 (unauthorized), 403 (access denied), 404 (not found)
@@ -249,7 +311,50 @@
   "version": 1
 }
 ```
-- **Response** (200 OK): Updated location
+- **Response** (200 OK):
+```json
+{
+  "name": "Updated Name",
+  "address": "New Address",
+  "country_code": "USA",
+  "version": 1,
+  "chargers": [
+    {
+      "id": "uuid",
+      "vendor": "Tesla",
+      "model": "Supercharger V3",
+      "serial_number": "TS001",
+      "connectors": [
+        {
+          "id": "uuid",
+          "connector_id": 1,
+          "power": 250.0,
+          "voltage": 400,
+          "amperage": 625,
+          "connector_type": "CCS",
+          "connector_standard": "DC"
+        }
+      ]
+    }
+  ],
+  "evses": [
+    {
+      "id": "uuid",
+      "evse_id": "string",
+      "connector": {
+        "id": "uuid",
+        "connector_id": 1,
+        "power": 250.0,
+        "voltage": 400,
+        "amperage": 625,
+        "connector_type": "CCS",
+        "connector_standard": "DC"
+      },
+      "created_at": "2025-01-01T00:00:00Z",
+    }
+  ]
+}
+```
 - **Error Codes**: 400 (validation error), 401 (unauthorized), 403 (access denied), 404 (not found), 409 (version conflict)
 
 #### DELETE /locations/{id}
@@ -265,27 +370,36 @@
   "charger_id": "uuid"
 }
 ```
-- **Response** (200 OK): Add charger to location_id
-- **Error Codes**: 400 (already assigned), 401 (unauthorized), 403 (access denied), 404 (charger/location not found)
-
-#### DELETE /locations/{id}/chargers/{charger_id}
-- **Description**: Detach charger from location
-- **Response** (204 No Content)
-- **Error Codes**: 400 (charger not assigned to the location), 401 (unauthorized), 403 (access denied)
-
-#### GET /locations/{id}/chargers
-- **Description**: Get chargers assigned to location
-- **Response** (200 OK): Array of charger objects
-
-#### GET /locations/{id}/evse
-- **Description**: Get EVSE points for location
 - **Response** (200 OK):
 ```json
 {
-  "data": [
+  "name": "Updated Name",
+  "address": "New Address",
+  "country_code": "USA",
+  "version": 1,
+  "chargers": [
     {
       "id": "uuid",
-      "evse_id": "US*ABC*E123*1",
+      "vendor": "Tesla",
+      "model": "Supercharger V3",
+      "serial_number": "TS001",
+      "connectors": [
+        {
+          "id": "uuid",
+          "connector_id": 1,
+          "power": 250.0,
+          "voltage": 400,
+          "amperage": 625,
+          "connector_type": "CCS",
+          "connector_standard": "DC"
+        }
+      ]
+    }
+  ],
+  "evses": [
+    {
+      "id": "uuid",
+      "evse_id": "string",
       "connector": {
         "id": "uuid",
         "connector_id": 1,
@@ -295,10 +409,63 @@
         "connector_type": "CCS",
         "connector_standard": "DC"
       },
-      "created_at": "2025-01-01T00:00:00Z"
+      "created_at": "2025-01-01T00:00:00Z",
     }
   ]
 }
+```
+- **Error Codes**: 400 (already assigned), 401 (unauthorized), 403 (access denied), 404 (charger/location not found)
+
+#### DELETE /locations/{id}/chargers/{charger_id}
+- **Description**: Detach charger from location
+- **Response** (204 No Content)
+- **Error Codes**: 400 (charger not assigned to the location), 401 (unauthorized), 403 (access denied)
+
+#### GET /locations/{id}/chargers
+- **Description**: Get chargers assigned to location
+- **Response** (200 OK):
+```json
+[
+  {
+      "id": "uuid",
+      "vendor": "Tesla",
+      "model": "Supercharger V3",
+      "serial_number": "TS001",
+      "connectors": [
+        {
+          "id": "uuid",
+          "connector_id": 1,
+          "power": 250.0,
+          "voltage": 400,
+          "amperage": 625,
+          "connector_type": "CCS",
+          "connector_standard": "DC"
+        }
+      ]
+    }
+]
+```
+
+#### GET /locations/{id}/evse
+- **Description**: Get EVSE points for location
+- **Response** (200 OK):
+```json
+[
+  {
+    "id": "uuid",
+    "evse_id": "US*ABC*E123*1",
+    "connector": {
+      "id": "uuid",
+      "connector_id": 1,
+      "power": 250.0,
+      "voltage": 400,
+      "amperage": 625,
+      "connector_type": "CCS",
+      "connector_standard": "DC"
+    },
+    "created_at": "2025-01-01T00:00:00Z"
+  }
+]
 ```
 
 ## 3. Authentication and Authorization
