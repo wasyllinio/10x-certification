@@ -10,14 +10,13 @@ type LocationChargerResponse struct {
 	Vendor       string                      `json:"vendor"`
 	Model        string                      `json:"model"`
 	SerialNumber string                      `json:"serial_number"`
-	Status       string                      `json:"status"`
 	Connectors   []LocationConnectorResponse `json:"connectors"`
 }
 
 // NewLocationChargerResponse creates a new LocationChargerResponse
 func NewLocationChargerResponse(
 	id uuid.UUID,
-	vendor, model, serialNumber, status string,
+	vendor, model, serialNumber string,
 	connectors []LocationConnectorResponse,
 ) *LocationChargerResponse {
 	return &LocationChargerResponse{
@@ -25,7 +24,6 @@ func NewLocationChargerResponse(
 		Vendor:       vendor,
 		Model:        model,
 		SerialNumber: serialNumber,
-		Status:       status,
 		Connectors:   connectors,
 	}
 }
