@@ -3,6 +3,7 @@ package handlers
 import (
 	"10x-certification/internal/domain/auth/command"
 	"10x-certification/internal/domain/auth/dto/request"
+	"10x-certification/internal/domain/auth/dto/response"
 	"10x-certification/internal/domain/auth/query"
 	"10x-certification/internal/infrastructure/http/dto"
 	"10x-certification/internal/shared/errors"
@@ -68,12 +69,35 @@ func (h *AuthHandler) Register(c *gin.Context) {
 
 // Login handles user login
 func (h *AuthHandler) Login(c *gin.Context) {
-	// TODO: Implement user login HTTP handler
-	// 1. Bind JSON request to DTO
+	// 1. Bind and validate request
+	var req request.LoginRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		validationErrors := dto.FormatValidationErrors(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":   "validation failed",
+			"code":    "VALIDATION_ERROR",
+			"details": validationErrors,
+		})
+		return
+	}
+
 	// 2. Create command
-	// 3. Call command handler
+	cmd := command.NewLoginUserCommand(&req)
+
+	// 3. Execute command
+	_, token, err := h.loginUserHandler.Handle(c.Request.Context(), cmd)
+	if err != nil {
+		httpErr := errors.MapDomainErrorToHTTP(err)
+		c.JSON(httpErr.StatusCode, gin.H{
+			"error": httpErr.Message,
+			"code":  httpErr.Code,
+		})
+		return
+	}
+
 	// 4. Return JWT token
-	c.JSON(http.StatusNotImplemented, gin.H{"error": "not implemented"})
+	resp := response.NewAuthResponse(token)
+	c.JSON(http.StatusOK, resp)
 }
 
 // GetUser handles getting user by ID

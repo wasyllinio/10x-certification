@@ -1,36 +1,17 @@
 package middleware
 
 import (
+	"10x-certification/internal/domain/auth/repository"
 	"10x-certification/internal/infrastructure/auth/jwt"
 	"10x-certification/internal/infrastructure/http/context"
-	"10x-certification/internal/shared/errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
-// ErrorMiddleware handles HTTP errors
-func ErrorMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.Next()
-
-		// Handle errors that occurred during request processing
-		if len(c.Errors) > 0 {
-			err := c.Errors.Last()
-
-			// Map domain errors to HTTP errors
-			httpErr := errors.MapDomainErrorToHTTP(err)
-			c.JSON(httpErr.StatusCode, gin.H{
-				"error": httpErr.Message,
-				"code":  httpErr.Code,
-			})
-		}
-	}
-}
-
 // AuthMiddleware handles JWT authentication
-func AuthMiddleware(jwtService *jwt.TokenService) gin.HandlerFunc {
+func AuthMiddleware(jwtService *jwt.TokenService, userRepo repository.UserRepository) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Extract token from Authorization header
 		authHeader := c.GetHeader("Authorization")
@@ -77,12 +58,54 @@ func AuthMiddleware(jwtService *jwt.TokenService) gin.HandlerFunc {
 			return
 		}
 
+		// Parse authorization ID from string to UUID
+		authorizationID, err := uuid.Parse(claims.AuthorizationID)
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error": "invalid authorization ID in token",
+				"code":  "UNAUTHORIZED",
+			})
+			c.Abort()
+			return
+		}
+
+		// Fetch user from database
+		user, err := userRepo.FindByID(c.Request.Context(), userID)
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error": "user not found",
+				"code":  "UNAUTHORIZED",
+			})
+			c.Abort()
+			return
+		}
+
+		// Verify authorization ID matches
+		if user.AuthorizationID != authorizationID {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error": "invalid authorization credentials",
+				"code":  "UNAUTHORIZED",
+			})
+			c.Abort()
+			return
+		}
+
+		// Verify role matches
+		if string(user.Role) != claims.Role {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error": "user role has changed, please login again",
+				"code":  "UNAUTHORIZED",
+			})
+			c.Abort()
+			return
+		}
+
 		// Set user context
 		authCtx := &context.AuthContext{
 			UserID:          userID,
-			Email:           claims.Email,
-			Role:            claims.Role,
-			AuthorizationID: claims.AuthorizationID,
+			Email:           user.Email, // Use email from database
+			Role:            string(user.Role),
+			AuthorizationID: user.AuthorizationID,
 		}
 		context.SetAuthContext(c, authCtx)
 
@@ -117,21 +140,5 @@ func AuthorizationMiddleware(allowedRoles []string) gin.HandlerFunc {
 			"code":  "FORBIDDEN",
 		})
 		c.Abort()
-	}
-}
-
-// CORSMiddleware handles CORS headers
-func CORSMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.Header("Access-Control-Allow-Origin", "*")
-		c.Header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-		c.Header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
-
-		if c.Request.Method == "OPTIONS" {
-			c.AbortWithStatus(http.StatusNoContent)
-			return
-		}
-
-		c.Next()
 	}
 }

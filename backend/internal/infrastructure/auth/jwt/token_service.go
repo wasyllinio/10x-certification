@@ -22,18 +22,16 @@ func NewTokenService(secretKey string) *TokenService {
 // TokenClaims represents JWT token claims
 type TokenClaims struct {
 	UserID          string `json:"user_id"`
-	Email           string `json:"email"`
 	Role            string `json:"role"`
 	AuthorizationID string `json:"authorization_id"`
 	jwt.RegisteredClaims
 }
 
 // GenerateToken generates a JWT token for user
-func (s *TokenService) GenerateToken(userID, email, role, authorizationID string) (string, error) {
+func (s *TokenService) GenerateToken(userID, role, authorizationID string) (string, error) {
 	now := time.Now()
 	claims := TokenClaims{
 		UserID:          userID,
-		Email:           email,
 		Role:            role,
 		AuthorizationID: authorizationID,
 		RegisteredClaims: jwt.RegisteredClaims{
@@ -75,5 +73,5 @@ func (s *TokenService) RefreshToken(tokenString string) (string, error) {
 	}
 
 	// Generate new token with extended expiration
-	return s.GenerateToken(claims.UserID, claims.Email, claims.Role, claims.AuthorizationID)
+	return s.GenerateToken(claims.UserID, claims.Role, claims.AuthorizationID)
 }

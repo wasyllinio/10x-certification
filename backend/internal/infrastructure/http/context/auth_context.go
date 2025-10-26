@@ -19,7 +19,7 @@ const (
 type AuthContext struct {
 	Email           string
 	Role            string
-	AuthorizationID string
+	AuthorizationID uuid.UUID
 	UserID          uuid.UUID
 }
 
@@ -71,10 +71,10 @@ func GetUserRole(c *gin.Context) (string, error) {
 }
 
 // GetAuthorizationID retrieves authorization ID from authentication context
-func GetAuthorizationID(c *gin.Context) (string, error) {
+func GetAuthorizationID(c *gin.Context) (uuid.UUID, error) {
 	auth, err := GetAuthContext(c)
 	if err != nil {
-		return "", fmt.Errorf("failed to get authorization ID: %w", err)
+		return uuid.Nil, fmt.Errorf("failed to get authorization ID: %w", err)
 	}
 	return auth.AuthorizationID, nil
 }

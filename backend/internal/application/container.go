@@ -4,6 +4,7 @@ import (
 	"10x-certification/internal/config"
 	authCommand "10x-certification/internal/domain/auth/command"
 	authQuery "10x-certification/internal/domain/auth/query"
+	authRepository "10x-certification/internal/domain/auth/repository"
 	chargersCommand "10x-certification/internal/domain/chargers/command"
 	chargersQuery "10x-certification/internal/domain/chargers/query"
 	locationsCommand "10x-certification/internal/domain/locations/command"
@@ -13,7 +14,7 @@ import (
 	"10x-certification/internal/infrastructure/auth/password"
 	"10x-certification/internal/infrastructure/http/handlers"
 	"10x-certification/internal/infrastructure/persistence/postgres"
-	"10x-certification/internal/infrastructure/persistence/postgres/repository"
+	postgresRepo "10x-certification/internal/infrastructure/persistence/postgres/repository"
 )
 
 // Container - DI Container
@@ -29,10 +30,7 @@ type Container struct {
 	PasswordHasher *password.Hasher
 
 	// Repositories
-	// UserRepository     interface{} // domain.UserRepository
-	// ChargerRepository  interface{} // domain.ChargerRepository
-	// LocationRepository interface{} // domain.LocationRepository
-	// AuditRepository    interface{} // domain.AuditRepository
+	UserRepository authRepository.UserRepository
 
 	// Command Handlers (Auth)
 	RegisterUserHandler *authCommand.RegisterUserHandler
@@ -84,11 +82,11 @@ func NewContainer(cfg *config.Config) *Container {
 	db := postgres.Connect(cfg)
 
 	// 2. Repository implementations
-	userRepo := repository.NewUserRepository(db.DB())
-	chargerRepo := repository.NewChargerRepository(db.DB())
-	locationRepo := repository.NewLocationRepository(db.DB())
-	evseRepo := repository.NewEVSERepository(db.DB())
-	connectorRepo := repository.NewConnectorRepository(db.DB())
+	userRepo := postgresRepo.NewUserRepository(db.DB())
+	chargerRepo := postgresRepo.NewChargerRepository(db.DB())
+	locationRepo := postgresRepo.NewLocationRepository(db.DB())
+	evseRepo := postgresRepo.NewEVSERepository(db.DB())
+	connectorRepo := postgresRepo.NewConnectorRepository(db.DB())
 
 	// 3. Domain services
 	evseGeneratorService := locationsService.NewEVSEGeneratorService(evseRepo)
@@ -165,6 +163,9 @@ func NewContainer(cfg *config.Config) *Container {
 		DB:             db,
 		JWTService:     jwtService,
 		PasswordHasher: passwordHasher,
+
+		// Repositories
+		UserRepository: userRepo,
 
 		// Auth handlers
 		RegisterUserHandler:   registerUserHandler,

@@ -5,8 +5,9 @@ import (
 	"10x-certification/internal/infrastructure/http/middleware"
 
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 // SetupRoutes sets up all HTTP routes
@@ -45,7 +46,7 @@ func SetupRoutes(container *application.Container) *gin.Engine {
 
 	// Protected routes
 	api := router.Group("/api")
-	api.Use(middleware.AuthMiddleware(container.JWTService))
+	api.Use(middleware.AuthMiddleware(container.JWTService, container.UserRepository))
 	{
 		// Chargers
 		chargers := api.Group("/chargers")
