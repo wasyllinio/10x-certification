@@ -2,7 +2,10 @@ package handlers
 
 import (
 	"10x-certification/internal/domain/auth/command"
+	"10x-certification/internal/domain/auth/dto/request"
 	"10x-certification/internal/domain/auth/query"
+	"10x-certification/internal/infrastructure/http/dto"
+	"10x-certification/internal/shared/errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -33,12 +36,34 @@ func NewAuthHandler(
 
 // Register handles user registration
 func (h *AuthHandler) Register(c *gin.Context) {
-	// TODO: Implement user registration HTTP handler
-	// 1. Bind JSON request to DTO
+	// 1. Bind and validate request
+	var req request.RegisterRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		validationErrors := dto.FormatValidationErrors(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":   "validation failed",
+			"code":    "VALIDATION_ERROR",
+			"details": validationErrors,
+		})
+		return
+	}
+
 	// 2. Create command
-	// 3. Call command handler
-	// 4. Return response
-	c.JSON(http.StatusNotImplemented, gin.H{"error": "not implemented"})
+	cmd := command.NewRegisterUserCommand(&req)
+
+	// 3. Execute command
+	_, err := h.registerUserHandler.Handle(c.Request.Context(), cmd)
+	if err != nil {
+		httpErr := errors.MapDomainErrorToHTTP(err)
+		c.JSON(httpErr.StatusCode, gin.H{
+			"error": httpErr.Message,
+			"code":  httpErr.Code,
+		})
+		return
+	}
+
+	// 4. Return success response
+	c.JSON(http.StatusCreated, gin.H{})
 }
 
 // Login handles user login

@@ -6,11 +6,11 @@ import (
 
 // LocationChargerResponse represents a charger response DTO for locations domain
 type LocationChargerResponse struct {
-	ID           uuid.UUID                   `json:"id"`
 	Vendor       string                      `json:"vendor"`
 	Model        string                      `json:"model"`
 	SerialNumber string                      `json:"serial_number"`
 	Connectors   []LocationConnectorResponse `json:"connectors"`
+	ID           uuid.UUID                   `json:"id"`
 }
 
 // NewLocationChargerResponse creates a new LocationChargerResponse

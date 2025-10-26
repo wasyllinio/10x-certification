@@ -4,14 +4,18 @@ import (
 	"10x-certification/internal/config"
 	"10x-certification/internal/infrastructure/logger"
 	"context"
+	"errors"
 	"fmt"
 	"log/slog"
 	"os"
 	"time"
 
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
+	slogGorm "github.com/orandin/slog-gorm"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	slogGorm "github.com/orandin/slog-gorm"
 )
 
 // Connection represents PostgreSQL database connection
@@ -69,6 +73,25 @@ func Connect(cfg *config.Config) *Connection {
 	sqlDB.SetConnMaxIdleTime(1 * time.Minute) // Maximum idle connection time
 
 	logger.Info("Successfully connected to PostgreSQL database")
+
+	// Get the directory where this file is located and construct path to migrations
+	migrationsDir := "file://migrations"
+
+	m, err := migrate.New(
+		migrationsDir,
+		cfg.DatabaseURL,
+	)
+	if err != nil {
+		logger.Error("Failed to create migration instance", "error", err)
+		os.Exit(1)
+	}
+
+	if err = m.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) {
+		logger.Error("Failed to run migrations", "error", err)
+		os.Exit(1)
+	}
+
+	logger.Info("Migrations completed successfully")
 
 	return &Connection{
 		db:     db,

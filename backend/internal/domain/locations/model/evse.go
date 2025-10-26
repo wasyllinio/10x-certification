@@ -8,11 +8,11 @@ import (
 
 // EVSE represents an Electric Vehicle Supply Equipment entity
 type EVSE struct {
-	ID          uuid.UUID
+	CreatedAt   time.Time
 	EvseID      string
+	ID          uuid.UUID
 	ConnectorID uuid.UUID
 	LocationID  uuid.UUID
-	CreatedAt   time.Time
 }
 
 // NewEVSE creates a new EVSE entity

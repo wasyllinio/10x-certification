@@ -9,12 +9,12 @@ import (
 
 // EVSEGenerated represents the event when EVSE points are generated
 type EVSEGenerated struct {
+	Timestamp time.Time
 	events.BaseEvent
+	EvseID      string
 	EVSEID      uuid.UUID
 	ConnectorID uuid.UUID
 	LocationID  uuid.UUID
-	EvseID      string
-	Timestamp   time.Time
 }
 
 // NewEVSEGenerated creates a new EVSEGenerated event

@@ -9,16 +9,16 @@ import (
 
 // ConnectorAdded represents the event when a connector is added to a charger
 type ConnectorAdded struct {
+	Timestamp time.Time
 	events.BaseEvent
-	ConnectorID       uuid.UUID
-	ChargerID         uuid.UUID
-	ConnectorIDInt    int
-	Power             float32
-	Voltage           int
-	Amperage          int
 	ConnectorType     string
 	ConnectorStandard string
-	Timestamp         time.Time
+	ConnectorIDInt    int
+	Voltage           int
+	Amperage          int
+	Power             float32
+	ConnectorID       uuid.UUID
+	ChargerID         uuid.UUID
 }
 
 // NewConnectorAdded creates a new ConnectorAdded event

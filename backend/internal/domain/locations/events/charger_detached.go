@@ -9,11 +9,11 @@ import (
 
 // ChargerDetached represents the event when a charger is detached from a location
 type ChargerDetached struct {
+	Timestamp time.Time
 	events.BaseEvent
 	ChargerID  uuid.UUID
 	LocationID uuid.UUID
 	OwnerID    uuid.UUID
-	Timestamp  time.Time
 }
 
 // NewChargerDetached creates a new ChargerDetached event

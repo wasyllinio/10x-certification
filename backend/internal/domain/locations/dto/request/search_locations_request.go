@@ -2,10 +2,10 @@ package request
 
 // SearchLocationsRequest represents search and filter parameters for locations
 type SearchLocationsRequest struct {
-	Page        int    `json:"page" validate:"min=1"`
-	Limit       int    `json:"limit" validate:"min=1,max=100"`
 	Search      string `json:"search,omitempty"`
-	CountryCode string `json:"country_code,omitempty" validate:"omitempty,len=3,regexp=^[A-Z]{3}$"`
+	CountryCode string `json:"country_code,omitempty" binding:"omitempty,len=3,regexp=^[A-Z]{3}$"`
+	Page        int    `json:"page" binding:"min=1"`
+	Limit       int    `json:"limit" binding:"min=1,max=100"`
 }
 
 // NewSearchLocationsRequest creates a new SearchLocationsRequest

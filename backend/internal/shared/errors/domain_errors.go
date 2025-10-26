@@ -7,9 +7,9 @@ import (
 
 // DomainError represents a domain-specific error
 type DomainError struct {
+	Cause   error
 	Code    string
 	Message string
-	Cause   error
 }
 
 // Error implements the error interface
@@ -47,13 +47,14 @@ const (
 
 // Common domain errors
 var (
-	ErrUserNotFound       = NewDomainError(ErrCodeNotFound, "user not found", nil)
-	ErrUserAlreadyExists  = NewDomainError(ErrCodeAlreadyExists, "user already exists", nil)
-	ErrChargerNotFound    = NewDomainError(ErrCodeNotFound, "charger not found", nil)
-	ErrLocationNotFound   = NewDomainError(ErrCodeNotFound, "location not found", nil)
-	ErrInvalidCredentials = NewDomainError(ErrCodeUnauthorized, "invalid credentials", nil)
-	ErrAccessDenied       = NewDomainError(ErrCodeForbidden, "access denied", nil)
-	ErrValidationFailed   = NewDomainError(ErrCodeValidation, "validation failed", nil)
+	ErrUserNotFound         = NewDomainError(ErrCodeNotFound, "user not found", nil)
+	ErrUserAlreadyExists    = NewDomainError(ErrCodeAlreadyExists, "user already exists", nil)
+	ErrChargerNotFound      = NewDomainError(ErrCodeNotFound, "charger not found", nil)
+	ErrChargerAlreadyExists = NewDomainError(ErrCodeAlreadyExists, "charger with this vendor and serial number already exists", nil)
+	ErrLocationNotFound     = NewDomainError(ErrCodeNotFound, "location not found", nil)
+	ErrInvalidCredentials   = NewDomainError(ErrCodeUnauthorized, "invalid credentials", nil)
+	ErrAccessDenied         = NewDomainError(ErrCodeForbidden, "access denied", nil)
+	ErrValidationFailed     = NewDomainError(ErrCodeValidation, "validation failed", nil)
 )
 
 // MapDomainErrorToHTTP maps domain errors to HTTP errors

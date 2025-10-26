@@ -9,10 +9,10 @@ import (
 
 // UserLoggedIn represents the event when a user logs in
 type UserLoggedIn struct {
-	events.BaseEvent
-	UserID    uuid.UUID
-	Email     string
 	Timestamp time.Time
+	events.BaseEvent
+	Email  string
+	UserID uuid.UUID
 }
 
 // NewUserLoggedIn creates a new UserLoggedIn event

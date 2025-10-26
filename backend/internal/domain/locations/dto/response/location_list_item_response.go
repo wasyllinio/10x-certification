@@ -8,15 +8,15 @@ import (
 
 // LocationListItemResponse represents a location item in a list response
 type LocationListItemResponse struct {
-	ID            uuid.UUID `json:"id"`
+	CreatedAt     time.Time `json:"created_at"`
+	UpdatedAt     time.Time `json:"updated_at"`
 	Name          string    `json:"name"`
 	Address       string    `json:"address"`
 	CountryCode   string    `json:"country_code"`
-	OwnerID       uuid.UUID `json:"owner_id"`
 	ChargersCount int       `json:"chargers_count"`
 	EVSECount     int       `json:"evse_count"`
-	CreatedAt     time.Time `json:"created_at"`
-	UpdatedAt     time.Time `json:"updated_at"`
+	ID            uuid.UUID `json:"id"`
+	OwnerID       uuid.UUID `json:"owner_id"`
 }
 
 // NewLocationListItemResponse creates a new LocationListItemResponse from domain Location

@@ -1,0 +1,100 @@
+version: "2"
+
+run:
+  timeout: 5m
+  tests: true
+  go: "1.25"
+
+output:
+  formats:
+    text:
+      path: stdout
+      print-linter-name: true
+      print-issued-lines: true
+
+linters:
+  default: none
+  enable:
+    # Critical linters
+    # - errcheck
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    
+    # Code quality
+    - gocritic
+    - goconst
+    - misspell
+    - unparam
+    - unconvert
+    
+    # Complexity and duplication
+    # - dupl
+    - gocyclo
+    
+    # Security
+    - gosec
+    
+    # Style
+    - copyloopvar
+    - nakedret
+    - prealloc
+  
+  settings:
+    errcheck:
+      check-blank: true
+      
+    gocritic:
+      enabled-tags:
+        - diagnostic
+        - performance
+        - experimental
+      disabled-checks:
+        - dupImport  # Allow imports for organization
+        - hugeParam
+        - rangeValCopy
+        - sprintfQuotedString
+        - unnamedResult
+        - unnecessaryBlock
+        - unnecessaryDefer
+        
+    gocyclo:
+      min-complexity: 15  # Allow moderate complexity for domain logic
+      
+    dupl:
+      threshold: 100
+      
+    gosec:
+      severity: medium
+      confidence: medium
+      excludes:
+        - G101
+        - G401
+    govet:
+      enable-all: true
+      disable:
+        - assign
+        - atomic
+        - ifaceassert
+        
+    misspell:
+      locale: US
+      
+    unparam:
+      check-exported: false
+      
+    lll:
+      line-length: 120  # Allow longer lines for domain-specific names
+      
+formatters:
+  enable:
+    - gofmt
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+      - vendor$
+      - mocks$

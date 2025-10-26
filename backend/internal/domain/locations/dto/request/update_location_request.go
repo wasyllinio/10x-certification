@@ -2,10 +2,10 @@ package request
 
 // UpdateLocationRequest represents the request to update a location
 type UpdateLocationRequest struct {
-	Name        string `json:"name" validate:"required"`
-	Address     string `json:"address" validate:"required"`
-	CountryCode string `json:"country_code" validate:"required,len=3,regexp=^[A-Z]{3}$"`
-	Version     int    `json:"version" validate:"required,min=1"`
+	Name        string `json:"name" binding:"required"`
+	Address     string `json:"address" binding:"required"`
+	CountryCode string `json:"country_code" binding:"required,len=3,regexp=^[A-Z]{3}$"`
+	Version     int    `json:"version" binding:"required,min=1"`
 }
 
 // NewUpdateLocationRequest creates a new UpdateLocationRequest

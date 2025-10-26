@@ -16,14 +16,14 @@ const (
 
 // User represents the user aggregate root
 type User struct {
-	ID              uuid.UUID
+	CreatedAt       time.Time
+	UpdatedAt       time.Time
 	Email           string
 	PasswordHash    string
 	PasswordSalt    string
 	Role            UserRole
+	ID              uuid.UUID
 	AuthorizationID uuid.UUID
-	CreatedAt       time.Time
-	UpdatedAt       time.Time
 }
 
 // NewUser creates a new user entity

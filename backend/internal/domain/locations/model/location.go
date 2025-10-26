@@ -8,14 +8,14 @@ import (
 
 // Location represents the location aggregate root
 type Location struct {
-	ID          uuid.UUID
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 	Name        string
 	Address     string
 	CountryCode string
-	OwnerID     uuid.UUID
 	Version     int
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	ID          uuid.UUID
+	OwnerID     uuid.UUID
 }
 
 // NewLocation creates a new location aggregate

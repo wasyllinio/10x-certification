@@ -17,18 +17,18 @@ const (
 
 // Charger represents the charger aggregate root
 type Charger struct {
-	ID                   uuid.UUID
-	Vendor               string
-	Model                string
-	SerialNumber         string
-	OwnerID              uuid.UUID
+	CreatedAt            time.Time
+	UpdatedAt            time.Time
 	LocationID           *uuid.UUID
 	AssignedToLocationAt *time.Time
 	LastStatusChangeAt   *time.Time
-	Version              int
+	Vendor               string
+	Model                string
+	SerialNumber         string
 	Connectors           []Connector
-	CreatedAt            time.Time
-	UpdatedAt            time.Time
+	Version              int
+	ID                   uuid.UUID
+	OwnerID              uuid.UUID
 }
 
 // NewCharger creates a new charger aggregate
@@ -65,7 +65,6 @@ func (c *Charger) AssignToLocation(locationID uuid.UUID) error {
 	c.LocationID = &locationID
 	c.AssignedToLocationAt = &now
 	c.LastStatusChangeAt = &now
-	c.Version++
 	c.UpdatedAt = now
 
 	return nil
@@ -81,7 +80,6 @@ func (c *Charger) DetachFromLocation() error {
 	c.LocationID = nil
 	c.AssignedToLocationAt = nil
 	c.LastStatusChangeAt = &now
-	c.Version++
 	c.UpdatedAt = now
 
 	return nil
@@ -97,7 +95,6 @@ func (c *Charger) AddConnector(connector Connector) error {
 	}
 
 	c.Connectors = append(c.Connectors, connector)
-	c.Version++
 	c.UpdatedAt = time.Now()
 
 	return nil
@@ -108,7 +105,6 @@ func (c *Charger) RemoveConnector(connectorID int) error {
 	for i, connector := range c.Connectors {
 		if connector.ConnectorID == connectorID {
 			c.Connectors = append(c.Connectors[:i], c.Connectors[i+1:]...)
-			c.Version++
 			c.UpdatedAt = time.Now()
 			return nil
 		}

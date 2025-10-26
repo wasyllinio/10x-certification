@@ -23,7 +23,10 @@ import (
 // 4. Graceful shutdown
 func main() {
 	// 1. Wczytanie konfiguracji
-	cfg := config.Load()
+	cfg, err := config.Load()
+	if err != nil {
+		log.Fatal("Failed to load configuration:", err)
+	}
 
 	// 2. Inicjalizacja DI Container
 	container := application.NewContainer(cfg)
@@ -56,9 +59,9 @@ func main() {
 	defer cancel()
 
 	if err := srv.Shutdown(ctx); err != nil {
-		log.Fatal("Server forced to shutdown:", err)
+		log.Println("Server forced to shutdown:", err)
 	}
-	container.DB.Close()
+	_ = container.DB.Close()
 
 	log.Println("Server exited")
 }

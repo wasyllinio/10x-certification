@@ -6,7 +6,7 @@ import (
 
 // AssignChargerRequest represents the request to assign a charger to a location
 type AssignChargerRequest struct {
-	ChargerID uuid.UUID `json:"charger_id" validate:"required"`
+	ChargerID uuid.UUID `json:"charger_id" binding:"required"`
 }
 
 // NewAssignChargerRequest creates a new AssignChargerRequest

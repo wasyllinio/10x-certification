@@ -8,12 +8,12 @@ import (
 
 // UserResponse represents user data response
 type UserResponse struct {
-	ID              uuid.UUID `json:"id"`
-	Email           string    `json:"email"`
-	Role            string    `json:"role"`
-	AuthorizationID uuid.UUID `json:"authorization_id"`
 	CreatedAt       time.Time `json:"created_at"`
 	UpdatedAt       time.Time `json:"updated_at"`
+	Email           string    `json:"email"`
+	Role            string    `json:"role"`
+	ID              uuid.UUID `json:"id"`
+	AuthorizationID uuid.UUID `json:"authorization_id"`
 }
 
 // NewUserResponse creates a new UserResponse from domain User

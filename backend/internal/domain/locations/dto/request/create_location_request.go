@@ -2,9 +2,9 @@ package request
 
 // CreateLocationRequest represents the request to create a new location
 type CreateLocationRequest struct {
-	Name        string `json:"name" validate:"required"`
-	Address     string `json:"address" validate:"required"`
-	CountryCode string `json:"country_code" validate:"required,len=3,regexp=^[A-Z]{3}$"`
+	Name        string `json:"name" binding:"required"`
+	Address     string `json:"address" binding:"required"`
+	CountryCode string `json:"country_code" binding:"required,len=3,regexp=^[A-Z]{3}$"`
 }
 
 // NewCreateLocationRequest creates a new CreateLocationRequest

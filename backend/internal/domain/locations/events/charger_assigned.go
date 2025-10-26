@@ -9,11 +9,11 @@ import (
 
 // ChargerAssigned represents the event when a charger is assigned to a location
 type ChargerAssigned struct {
+	Timestamp time.Time
 	events.BaseEvent
 	ChargerID  uuid.UUID
 	LocationID uuid.UUID
 	OwnerID    uuid.UUID
-	Timestamp  time.Time
 }
 
 // NewChargerAssigned creates a new ChargerAssigned event

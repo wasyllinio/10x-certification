@@ -61,6 +61,14 @@ frontend/.yarn-integrity
 .env.test.local
 .env.production.local
 
+# Backend environment files (in backend/ directory)
+backend/.env
+backend/.env.local
+backend/.env.*.local
+backend/.env.development
+backend/.env.test
+backend/.env.production
+
 # Build outputs
 frontend/dist/
 frontend/build/

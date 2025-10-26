@@ -6,9 +6,9 @@ import (
 
 // HTTPError represents an HTTP-specific error
 type HTTPError struct {
-	StatusCode int
 	Message    string
 	Code       string
+	StatusCode int
 }
 
 // Error implements the error interface

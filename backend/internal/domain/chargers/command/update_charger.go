@@ -1,6 +1,7 @@
 package command
 
 import (
+	"10x-certification/internal/domain/chargers/dto/request"
 	"10x-certification/internal/domain/chargers/model"
 	"10x-certification/internal/domain/chargers/repository"
 	"context"
@@ -10,28 +11,15 @@ import (
 
 // UpdateChargerCommand represents the command to update a charger
 type UpdateChargerCommand struct {
-	ChargerID    uuid.UUID
-	Vendor       string
-	Model        string
-	SerialNumber string
-	Version      int
-	Connectors   []model.Connector
+	Request   *request.UpdateChargerRequest
+	ChargerID uuid.UUID
 }
 
 // NewUpdateChargerCommand creates a new UpdateChargerCommand
-func NewUpdateChargerCommand(
-	chargerID uuid.UUID,
-	vendor, model, serialNumber string,
-	version int,
-	connectors []model.Connector,
-) *UpdateChargerCommand {
+func NewUpdateChargerCommand(chargerID uuid.UUID, req *request.UpdateChargerRequest) *UpdateChargerCommand {
 	return &UpdateChargerCommand{
-		ChargerID:    chargerID,
-		Vendor:       vendor,
-		Model:        model,
-		SerialNumber: serialNumber,
-		Version:      version,
-		Connectors:   connectors,
+		ChargerID: chargerID,
+		Request:   req,
 	}
 }
 

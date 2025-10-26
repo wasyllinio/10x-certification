@@ -8,15 +8,15 @@ import (
 
 // ChargerDetailResponse represents a detailed charger response DTO
 type ChargerDetailResponse struct {
-	ID           uuid.UUID           `json:"id"`
+	CreatedAt    time.Time           `json:"created_at"`
+	LocationID   *uuid.UUID          `json:"location_id,omitempty"`
 	Vendor       string              `json:"vendor"`
 	Model        string              `json:"model"`
 	SerialNumber string              `json:"serial_number"`
-	OwnerID      uuid.UUID           `json:"owner_id"`
-	LocationID   *uuid.UUID          `json:"location_id,omitempty"`
 	Status       string              `json:"status"`
 	Connectors   []ConnectorResponse `json:"connectors"`
-	CreatedAt    time.Time           `json:"created_at"`
+	ID           uuid.UUID           `json:"id"`
+	OwnerID      uuid.UUID           `json:"owner_id"`
 }
 
 // NewChargerDetailResponse creates a new ChargerDetailResponse from domain Charger

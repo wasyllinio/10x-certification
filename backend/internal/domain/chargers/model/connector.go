@@ -27,16 +27,16 @@ const (
 
 // Connector represents a charging connector entity
 type Connector struct {
-	ID                uuid.UUID
-	ChargerID         uuid.UUID
-	ConnectorID       int
-	Power             float32
-	Voltage           int
-	Amperage          int
-	ConnectorType     ConnectorType
-	ConnectorStandard ConnectorStandard
 	CreatedAt         time.Time
 	UpdatedAt         time.Time
+	ConnectorType     ConnectorType
+	ConnectorStandard ConnectorStandard
+	ConnectorID       int
+	Voltage           int
+	Amperage          int
+	Power             float32
+	ID                uuid.UUID
+	ChargerID         uuid.UUID
 }
 
 // NewConnector creates a new connector entity

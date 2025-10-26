@@ -6,13 +6,13 @@ import (
 
 // LocationDetailResponse represents a detailed location response DTO with embedded chargers and EVSEs
 type LocationDetailResponse struct {
-	ID          uuid.UUID                 `json:"id"`
 	Name        string                    `json:"name"`
 	Address     string                    `json:"address"`
 	CountryCode string                    `json:"country_code"`
-	Version     int                       `json:"version"`
 	Chargers    []LocationChargerResponse `json:"chargers"`
 	EVSEs       []EVSEResponse            `json:"evses"`
+	Version     int                       `json:"version"`
+	ID          uuid.UUID                 `json:"id"`
 }
 
 // NewLocationDetailResponse creates a new LocationDetailResponse from domain Location

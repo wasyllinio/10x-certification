@@ -1,6 +1,7 @@
 package command
 
 import (
+	"10x-certification/internal/domain/locations/dto/request"
 	"10x-certification/internal/domain/locations/model"
 	locationsRepo "10x-certification/internal/domain/locations/repository"
 	"context"
@@ -10,19 +11,15 @@ import (
 
 // CreateLocationCommand represents the command to create a new location
 type CreateLocationCommand struct {
-	Name        string
-	Address     string
-	CountryCode string
-	OwnerID     uuid.UUID
+	Request *request.CreateLocationRequest
+	OwnerID uuid.UUID
 }
 
 // NewCreateLocationCommand creates a new CreateLocationCommand
-func NewCreateLocationCommand(name, address, countryCode string, ownerID uuid.UUID) *CreateLocationCommand {
+func NewCreateLocationCommand(req *request.CreateLocationRequest, ownerID uuid.UUID) *CreateLocationCommand {
 	return &CreateLocationCommand{
-		Name:        name,
-		Address:     address,
-		CountryCode: countryCode,
-		OwnerID:     ownerID,
+		Request: req,
+		OwnerID: ownerID,
 	}
 }
 

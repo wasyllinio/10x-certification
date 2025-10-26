@@ -1,5 +1,12 @@
 package jwt
 
+import (
+	"errors"
+	"time"
+
+	"github.com/golang-jwt/jwt/v5"
+)
+
 // TokenService represents JWT token service
 type TokenService struct {
 	secretKey string
@@ -18,31 +25,55 @@ type TokenClaims struct {
 	Email           string `json:"email"`
 	Role            string `json:"role"`
 	AuthorizationID string `json:"authorization_id"`
-	ExpiresAt       int64  `json:"exp"`
-	IssuedAt        int64  `json:"iat"`
+	jwt.RegisteredClaims
 }
 
 // GenerateToken generates a JWT token for user
 func (s *TokenService) GenerateToken(userID, email, role, authorizationID string) (string, error) {
-	// TODO: Implement JWT token generation using jwt-go library
-	// 1. Create claims
-	// 2. Sign token with secret key
-	// 3. Return signed token
-	panic("not implemented")
+	now := time.Now()
+	claims := TokenClaims{
+		UserID:          userID,
+		Email:           email,
+		Role:            role,
+		AuthorizationID: authorizationID,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(now.Add(24 * time.Hour)), // 24 hours
+			IssuedAt:  jwt.NewNumericDate(now),
+			NotBefore: jwt.NewNumericDate(now),
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString([]byte(s.secretKey))
 }
 
 // ValidateToken validates a JWT token
 func (s *TokenService) ValidateToken(tokenString string) (*TokenClaims, error) {
-	// TODO: Implement JWT token validation
-	// 1. Parse token
-	// 2. Validate signature
-	// 3. Check expiration
-	// 4. Return claims
-	panic("not implemented")
+	token, err := jwt.ParseWithClaims(tokenString, &TokenClaims{}, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, errors.New("unexpected signing method")
+		}
+		return []byte(s.secretKey), nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	if claims, ok := token.Claims.(*TokenClaims); ok && token.Valid {
+		return claims, nil
+	}
+
+	return nil, errors.New("invalid token")
 }
 
 // RefreshToken generates a new token with extended expiration
 func (s *TokenService) RefreshToken(tokenString string) (string, error) {
-	// TODO: Implement token refresh logic
-	panic("not implemented")
+	claims, err := s.ValidateToken(tokenString)
+	if err != nil {
+		return "", err
+	}
+
+	// Generate new token with extended expiration
+	return s.GenerateToken(claims.UserID, claims.Email, claims.Role, claims.AuthorizationID)
 }

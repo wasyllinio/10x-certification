@@ -2,10 +2,10 @@ package request
 
 // CreateChargerRequest represents the request to create a new charger
 type CreateChargerRequest struct {
-	Vendor       string             `json:"vendor" validate:"required"`
-	Model        string             `json:"model" validate:"required"`
-	SerialNumber string             `json:"serial_number" validate:"required"`
-	Connectors   []ConnectorRequest `json:"connectors" validate:"required,min=1,dive"`
+	Vendor       string             `json:"vendor" binding:"required"`
+	Model        string             `json:"model" binding:"required"`
+	SerialNumber string             `json:"serial_number" binding:"required"`
+	Connectors   []ConnectorRequest `json:"connectors" binding:"required,min=1,dive"`
 }
 
 // NewCreateChargerRequest creates a new CreateChargerRequest

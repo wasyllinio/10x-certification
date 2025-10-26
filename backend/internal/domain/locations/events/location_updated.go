@@ -9,13 +9,13 @@ import (
 
 // LocationUpdated represents the event when a location is updated
 type LocationUpdated struct {
+	Timestamp time.Time
 	events.BaseEvent
-	LocationID  uuid.UUID
 	Name        string
 	Address     string
 	CountryCode string
+	LocationID  uuid.UUID
 	OwnerID     uuid.UUID
-	Timestamp   time.Time
 }
 
 // NewLocationUpdated creates a new LocationUpdated event

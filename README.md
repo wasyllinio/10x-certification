@@ -53,17 +53,13 @@ cd backend
 go mod download
 ```
 
-3. Set up environment variables (create `.env` file):
+3. Set up environment variables:
 ```bash
-# Database configuration
-DB_HOST=localhost
-DB_PORT=5432
-DB_USER=your_username
-DB_PASSWORD=your_password
-DB_NAME=ecms
+# Skopiuj przykładowy plik konfiguracyjny
+cp .env.example .env
 
-# JWT configuration
-JWT_SECRET=your_jwt_secret
+# Edytuj .env i dostosuj wartości
+# Szczegóły w backend/README.md
 ```
 
 4. Run database migrations (if applicable):
@@ -73,10 +69,12 @@ JWT_SECRET=your_jwt_secret
 
 5. Start the backend server:
 ```bash
-go run main.go
+go run cmd/api/main.go
 ```
 
 The backend API will be available at `http://localhost:8080`
+
+**Uwaga:** Backend używa własnych plików konfiguracyjnych w katalogu `backend/`. Zobacz `backend/README.md` dla szczegółów konfiguracji. Główny plik `.env` w root jest używany tylko przez Docker Compose.
 
 ### Frontend Setup
 

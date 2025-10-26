@@ -10,9 +10,9 @@ import (
 type SearchChargersQuery struct {
 	OwnerID string
 	Search  string
+	Status  string
 	Page    int
 	Limit   int
-	Status  string
 }
 
 // NewSearchChargersQuery creates a new SearchChargersQuery

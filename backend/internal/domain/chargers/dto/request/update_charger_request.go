@@ -2,11 +2,11 @@ package request
 
 // UpdateChargerRequest represents the request to update a charger
 type UpdateChargerRequest struct {
-	Vendor       string             `json:"vendor" validate:"required"`
-	Model        string             `json:"model" validate:"required"`
-	SerialNumber string             `json:"serial_number" validate:"required"`
-	Version      int                `json:"version" validate:"required,min=1"`
-	Connectors   []ConnectorRequest `json:"connectors" validate:"required,min=1,dive"`
+	Vendor       string             `json:"vendor" binding:"required"`
+	Model        string             `json:"model" binding:"required"`
+	SerialNumber string             `json:"serial_number" binding:"required"`
+	Connectors   []ConnectorRequest `json:"connectors" binding:"required,min=1,dive"`
+	Version      int                `json:"version" binding:"required,min=1"`
 }
 
 // NewUpdateChargerRequest creates a new UpdateChargerRequest

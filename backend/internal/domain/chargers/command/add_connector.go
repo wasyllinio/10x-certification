@@ -1,8 +1,10 @@
 package command
 
 import (
+	"10x-certification/internal/domain/chargers/dto/request"
 	"10x-certification/internal/domain/chargers/model"
 	"10x-certification/internal/domain/chargers/repository"
+	"10x-certification/internal/infrastructure/persistence/models"
 	"context"
 
 	"github.com/google/uuid"
@@ -10,32 +12,15 @@ import (
 
 // AddConnectorCommand represents the command to add a connector to a charger
 type AddConnectorCommand struct {
-	ChargerID         uuid.UUID
-	ConnectorID       int
-	Power             float32
-	Voltage           int
-	Amperage          int
-	ConnectorType     model.ConnectorType
-	ConnectorStandard model.ConnectorStandard
+	Request   *request.ConnectorRequest
+	ChargerID uuid.UUID
 }
 
 // NewAddConnectorCommand creates a new AddConnectorCommand
-func NewAddConnectorCommand(
-	chargerID uuid.UUID,
-	connectorID int,
-	power float32,
-	voltage, amperage int,
-	connectorType model.ConnectorType,
-	connectorStandard model.ConnectorStandard,
-) *AddConnectorCommand {
+func NewAddConnectorCommand(chargerID uuid.UUID, req *request.ConnectorRequest) *AddConnectorCommand {
 	return &AddConnectorCommand{
-		ChargerID:         chargerID,
-		ConnectorID:       connectorID,
-		Power:             power,
-		Voltage:           voltage,
-		Amperage:          amperage,
-		ConnectorType:     connectorType,
-		ConnectorStandard: connectorStandard,
+		ChargerID: chargerID,
+		Request:   req,
 	}
 }
 
@@ -51,13 +36,45 @@ func NewAddConnectorHandler(connectorRepo repository.ConnectorRepository) *AddCo
 	}
 }
 
+// HandleInternal - internal method used by CreateChargerHandler for mapping domain to DB model
+func (h *AddConnectorHandler) HandleInternal(chargerID uuid.UUID, connector model.Connector) (*models.ConnectorDB, error) {
+	// Validate connector
+	if err := connector.Validate(); err != nil {
+		return nil, err
+	}
+
+	// Map domain -> DB
+	connectorDB := models.NewConnectorDB()
+	connectorDB.ChargerID = chargerID
+	connectorDB.ConnectorID = connector.ConnectorID
+	connectorDB.Power = float64(connector.Power)
+	connectorDB.Voltage = connector.Voltage
+	connectorDB.Amperage = connector.Amperage
+	connectorDB.ConnectorType = models.ConnectorType(connector.ConnectorType)
+	connectorDB.ConnectorStandard = models.ConnectorStandard(connector.ConnectorStandard)
+
+	return connectorDB, nil
+}
+
 // Handle executes the add connector command
-func (h *AddConnectorHandler) Handle(ctx context.Context, cmd *AddConnectorCommand) (*model.Charger, error) {
-	// TODO: Implement add connector logic
-	// 1. Find charger by ID
-	// 2. Create new connector
-	// 3. Add connector to charger
-	// 4. Save to repository
-	// 5. Publish ConnectorAdded event
-	panic("not implemented")
+func (h *AddConnectorHandler) Handle(ctx context.Context, cmd *AddConnectorCommand) error {
+	// Create domain model from DTO
+	connector := model.NewConnector(
+		cmd.ChargerID,
+		cmd.Request.ConnectorID,
+		float32(cmd.Request.Power),
+		cmd.Request.Voltage,
+		cmd.Request.Amperage,
+		model.ConnectorType(cmd.Request.ConnectorType),
+		model.ConnectorStandard(cmd.Request.ConnectorStandard),
+	)
+
+	// Map to DB model
+	connectorDB, err := h.HandleInternal(cmd.ChargerID, *connector)
+	if err != nil {
+		return err
+	}
+
+	// Save to repository
+	return h.connectorRepo.Create(ctx, connectorDB)
 }

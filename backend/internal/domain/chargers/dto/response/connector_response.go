@@ -6,13 +6,13 @@ import (
 
 // ConnectorResponse represents a connector response DTO
 type ConnectorResponse struct {
-	ID                uuid.UUID `json:"id"`
+	ConnectorType     string    `json:"connector_type"`
+	ConnectorStandard string    `json:"connector_standard"`
 	ConnectorID       int       `json:"connector_id"`
 	Power             float64   `json:"power"`
 	Voltage           int       `json:"voltage"`
 	Amperage          int       `json:"amperage"`
-	ConnectorType     string    `json:"connector_type"`
-	ConnectorStandard string    `json:"connector_standard"`
+	ID                uuid.UUID `json:"id"`
 }
 
 // NewConnectorResponse creates a new ConnectorResponse from domain Connector

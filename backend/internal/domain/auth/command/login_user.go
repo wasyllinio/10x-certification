@@ -1,6 +1,7 @@
 package command
 
 import (
+	"10x-certification/internal/domain/auth/dto/request"
 	"10x-certification/internal/domain/auth/model"
 	"10x-certification/internal/domain/auth/repository"
 	"10x-certification/internal/infrastructure/auth/jwt"
@@ -10,15 +11,13 @@ import (
 
 // LoginUserCommand represents the command to login a user
 type LoginUserCommand struct {
-	Email    string
-	Password string
+	Request *request.LoginRequest
 }
 
 // NewLoginUserCommand creates a new LoginUserCommand
-func NewLoginUserCommand(email, password string) *LoginUserCommand {
+func NewLoginUserCommand(req *request.LoginRequest) *LoginUserCommand {
 	return &LoginUserCommand{
-		Email:    email,
-		Password: password,
+		Request: req,
 	}
 }
 

@@ -311,7 +311,7 @@ ALTER TABLE connectors ADD CONSTRAINT chk_voltage CHECK (voltage > 0);
 ALTER TABLE connectors ADD CONSTRAINT chk_amperage CHECK (amperage > 0);
 
 -- Walidacja formatu EvseID
-ALTER TABLE evse ADD CONSTRAINT chk_evse_id_format CHECK (evse_id ~ '^[A-Z]{3}\*[A-Z0-9]+\*E[A-Z0-9\*]+\*[0-9]+$');
+ALTER TABLE evse ADD CONSTRAINT chk_evse_id_format CHECK (evse_id ~ '^[A-Z]{2}\*[A-Z0-9]{3}\*E[A-Z0-9\*]+$');
 ```
 
 ### 5.2 UNIQUE constraints

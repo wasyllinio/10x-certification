@@ -2,7 +2,11 @@ package handlers
 
 import (
 	"10x-certification/internal/domain/chargers/command"
+	"10x-certification/internal/domain/chargers/dto/request"
 	"10x-certification/internal/domain/chargers/query"
+	"10x-certification/internal/infrastructure/http/context"
+	"10x-certification/internal/infrastructure/http/dto"
+	"10x-certification/internal/shared/errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -51,8 +55,46 @@ func NewChargerHandler(
 
 // Create handles charger creation
 func (h *ChargerHandler) Create(c *gin.Context) {
-	// TODO: Implement charger creation HTTP handler
-	c.JSON(http.StatusNotImplemented, gin.H{"error": "not implemented"})
+	// Extract user ID from context
+	userID, err := context.GetUserID(c)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "user not authenticated",
+			"code":  "UNAUTHORIZED",
+		})
+		return
+	}
+
+	// Bind and validate request
+	var req request.CreateChargerRequest
+	if err = c.ShouldBindJSON(&req); err != nil {
+		validationErrors := dto.FormatValidationErrors(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":   "validation failed",
+			"code":    "VALIDATION_ERROR",
+			"details": validationErrors,
+		})
+		return
+	}
+
+	// Create command with DTO
+	cmd := command.NewCreateChargerCommand(&req, userID)
+
+	// Execute command
+	chargerID, err := h.createChargerHandler.Handle(c.Request.Context(), cmd)
+	if err != nil {
+		httpErr := errors.MapDomainErrorToHTTP(err)
+		c.JSON(httpErr.StatusCode, gin.H{
+			"error": httpErr.Message,
+			"code":  httpErr.Code,
+		})
+		return
+	}
+
+	// Return response
+	c.JSON(http.StatusCreated, gin.H{
+		"id": chargerID.String(),
+	})
 }
 
 // List handles listing chargers

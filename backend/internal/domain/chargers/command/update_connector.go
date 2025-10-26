@@ -1,6 +1,7 @@
 package command
 
 import (
+	"10x-certification/internal/domain/chargers/dto/request"
 	"10x-certification/internal/domain/chargers/model"
 	"10x-certification/internal/domain/chargers/repository"
 	"context"
@@ -8,29 +9,15 @@ import (
 
 // UpdateConnectorCommand represents the command to update a connector
 type UpdateConnectorCommand struct {
-	ConnectorID       string
-	Power             float32
-	Voltage           int
-	Amperage          int
-	ConnectorType     model.ConnectorType
-	ConnectorStandard model.ConnectorStandard
+	Request     *request.ConnectorRequest
+	ConnectorID string
 }
 
 // NewUpdateConnectorCommand creates a new UpdateConnectorCommand
-func NewUpdateConnectorCommand(
-	connectorID string,
-	power float32,
-	voltage, amperage int,
-	connectorType model.ConnectorType,
-	connectorStandard model.ConnectorStandard,
-) *UpdateConnectorCommand {
+func NewUpdateConnectorCommand(connectorID string, req *request.ConnectorRequest) *UpdateConnectorCommand {
 	return &UpdateConnectorCommand{
-		ConnectorID:       connectorID,
-		Power:             power,
-		Voltage:           voltage,
-		Amperage:          amperage,
-		ConnectorType:     connectorType,
-		ConnectorStandard: connectorStandard,
+		ConnectorID: connectorID,
+		Request:     req,
 	}
 }
 

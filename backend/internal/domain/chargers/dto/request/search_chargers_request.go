@@ -6,11 +6,11 @@ import (
 
 // SearchChargersRequest represents search and filter parameters for chargers
 type SearchChargersRequest struct {
-	Page       int        `json:"page" validate:"min=1"`
-	Limit      int        `json:"limit" validate:"min=1,max=100"`
-	Search     string     `json:"search,omitempty"`
-	Status     string     `json:"status,omitempty" validate:"omitempty,oneof=warehouse assigned"`
 	LocationID *uuid.UUID `json:"location_id,omitempty"`
+	Search     string     `json:"search,omitempty"`
+	Status     string     `json:"status,omitempty" binding:"omitempty,oneof=warehouse assigned"`
+	Page       int        `json:"page" binding:"min=1"`
+	Limit      int        `json:"limit" binding:"min=1,max=100"`
 }
 
 // NewSearchChargersRequest creates a new SearchChargersRequest

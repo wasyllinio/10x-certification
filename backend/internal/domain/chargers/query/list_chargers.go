@@ -9,9 +9,9 @@ import (
 // ListChargersQuery represents the query to list chargers
 type ListChargersQuery struct {
 	OwnerID string
+	Status  string
 	Page    int
 	Limit   int
-	Status  string
 }
 
 // NewListChargersQuery creates a new ListChargersQuery

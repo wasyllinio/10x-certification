@@ -89,16 +89,14 @@ func NewContainer(cfg *config.Config) *Container {
 	locationRepo := repository.NewLocationRepository(db.DB())
 	evseRepo := repository.NewEVSERepository(db.DB())
 	connectorRepo := repository.NewConnectorRepository(db.DB())
-	// auditRepo := postgres.NewAuditRepository(db)
 
 	// 3. Domain services
 	evseGeneratorService := locationsService.NewEVSEGeneratorService(evseRepo)
 
 	// 3. Domain handlers (Auth)
 	registerUserHandler := authCommand.NewRegisterUserHandler(
-		userRepo, // userRepo - będzie dodane po implementacji
+		userRepo,
 		passwordHasher,
-		jwtService,
 	)
 	loginUserHandler := authCommand.NewLoginUserHandler(
 		userRepo, // userRepo - będzie dodane po implementacji
@@ -109,10 +107,10 @@ func NewContainer(cfg *config.Config) *Container {
 	getUserByEmailHandler := authQuery.NewGetUserByEmailHandler(nil)
 
 	// 4. Domain handlers (Chargers)
-	createChargerHandler := chargersCommand.NewCreateChargerHandler(chargerRepo, connectorRepo)
+	addConnectorHandler := chargersCommand.NewAddConnectorHandler(connectorRepo)
+	createChargerHandler := chargersCommand.NewCreateChargerHandler(chargerRepo, addConnectorHandler)
 	updateChargerHandler := chargersCommand.NewUpdateChargerHandler(chargerRepo)
 	deleteChargerHandler := chargersCommand.NewDeleteChargerHandler(chargerRepo)
-	addConnectorHandler := chargersCommand.NewAddConnectorHandler(connectorRepo)
 	updateConnectorHandler := chargersCommand.NewUpdateConnectorHandler(connectorRepo)
 	deleteConnectorHandler := chargersCommand.NewDeleteConnectorHandler(connectorRepo)
 

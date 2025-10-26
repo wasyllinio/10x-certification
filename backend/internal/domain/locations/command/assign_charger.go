@@ -2,6 +2,7 @@ package command
 
 import (
 	chargersRepo "10x-certification/internal/domain/chargers/repository"
+	"10x-certification/internal/domain/locations/dto/request"
 	locationsRepo "10x-certification/internal/domain/locations/repository"
 	locationsService "10x-certification/internal/domain/locations/service"
 	"context"
@@ -11,15 +12,15 @@ import (
 
 // AssignChargerCommand represents the command to assign charger to location
 type AssignChargerCommand struct {
+	Request    *request.AssignChargerRequest
 	LocationID uuid.UUID
-	ChargerID  uuid.UUID
 }
 
 // NewAssignChargerCommand creates a new AssignChargerCommand
-func NewAssignChargerCommand(locationID, chargerID uuid.UUID) *AssignChargerCommand {
+func NewAssignChargerCommand(locationID uuid.UUID, req *request.AssignChargerRequest) *AssignChargerCommand {
 	return &AssignChargerCommand{
 		LocationID: locationID,
-		ChargerID:  chargerID,
+		Request:    req,
 	}
 }
 

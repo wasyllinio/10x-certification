@@ -9,13 +9,13 @@ import (
 
 // ChargerUpdated represents the event when a charger is updated
 type ChargerUpdated struct {
+	Timestamp time.Time
 	events.BaseEvent
-	ChargerID    uuid.UUID
 	Vendor       string
 	Model        string
 	SerialNumber string
+	ChargerID    uuid.UUID
 	OwnerID      uuid.UUID
-	Timestamp    time.Time
 }
 
 // NewChargerUpdated creates a new ChargerUpdated event

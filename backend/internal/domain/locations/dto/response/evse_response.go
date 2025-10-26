@@ -8,10 +8,10 @@ import (
 
 // EVSEResponse represents an EVSE response DTO with embedded connector data
 type EVSEResponse struct {
-	ID        uuid.UUID                 `json:"id"`
+	CreatedAt time.Time                 `json:"created_at"`
 	EvseID    string                    `json:"evse_id"`
 	Connector LocationConnectorResponse `json:"connector"`
-	CreatedAt time.Time                 `json:"created_at"`
+	ID        uuid.UUID                 `json:"id"`
 }
 
 // NewEVSEResponse creates a new EVSEResponse from domain EVSE

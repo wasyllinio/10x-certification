@@ -1,6 +1,7 @@
 package command
 
 import (
+	"10x-certification/internal/domain/locations/dto/request"
 	"10x-certification/internal/domain/locations/model"
 	locationsRepo "10x-certification/internal/domain/locations/repository"
 	"context"
@@ -10,21 +11,15 @@ import (
 
 // UpdateLocationCommand represents the command to update a location
 type UpdateLocationCommand struct {
-	LocationID  uuid.UUID
-	Name        string
-	Address     string
-	CountryCode string
-	Version     int
+	Request    *request.UpdateLocationRequest
+	LocationID uuid.UUID
 }
 
 // NewUpdateLocationCommand creates a new UpdateLocationCommand
-func NewUpdateLocationCommand(locationID uuid.UUID, name, address, countryCode string, version int) *UpdateLocationCommand {
+func NewUpdateLocationCommand(locationID uuid.UUID, req *request.UpdateLocationRequest) *UpdateLocationCommand {
 	return &UpdateLocationCommand{
-		LocationID:  locationID,
-		Name:        name,
-		Address:     address,
-		CountryCode: countryCode,
-		Version:     version,
+		LocationID: locationID,
+		Request:    req,
 	}
 }
 

@@ -9,11 +9,11 @@ import (
 
 // UserRegistered represents the event when a user is registered
 type UserRegistered struct {
-	events.BaseEvent
-	UserID    uuid.UUID
-	Email     string
-	Role      string
 	Timestamp time.Time
+	events.BaseEvent
+	Email  string
+	Role   string
+	UserID uuid.UUID
 }
 
 // NewUserRegistered creates a new UserRegistered event

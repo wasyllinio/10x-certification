@@ -4,15 +4,34 @@ import (
 	"10x-certification/internal/application"
 	"10x-certification/internal/infrastructure/http/middleware"
 
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"time"
 )
 
 // SetupRoutes sets up all HTTP routes
 func SetupRoutes(container *application.Container) *gin.Engine {
-	router := gin.Default()
+	router := gin.New()
 
-	// Middleware
+	// Middlewares
+	router.Use(gin.Recovery())
+	router.Use(gin.LoggerWithConfig(gin.LoggerConfig{
+		Formatter: func(param gin.LogFormatterParams) string {
+			return fmt.Sprintf("%s - [%s] \"%s %s %s %d %s \"%s\" %s\"\n",
+				param.ClientIP,
+				param.TimeStamp.Format(time.RFC3339Nano),
+				param.Method,
+				param.Path,
+				param.Request.Proto,
+				param.StatusCode,
+				param.Latency,
+				param.Request.UserAgent(),
+				param.ErrorMessage,
+			)
+		},
+	}))
 	router.Use(middleware.ErrorMiddleware())
+	router.Use(middleware.CORSMiddleware())
 
 	// Health check
 	router.GET("/health", container.HealthHandler.Health)
