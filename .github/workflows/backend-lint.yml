@@ -53,13 +53,13 @@ jobs:
             ${{ runner.os }}-golangci-lint-
       
       - name: Install golangci-lint
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v8
         with:
           version: latest
           working-directory: ./backend
       
       - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v8
         with:
           version: latest
           args: --timeout=5m
@@ -67,7 +67,7 @@ jobs:
       
       - name: Annotate PR
         if: github.event_name == 'pull_request'
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v8
         with:
           version: latest
           github-token: ${{ secrets.GITHUB_TOKEN }}

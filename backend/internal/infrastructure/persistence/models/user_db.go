@@ -24,7 +24,7 @@ type UserDB struct {
 	PasswordHash    string         `gorm:"column:password_hash;type:varchar(255);not null"`
 	PasswordSalt    string         `gorm:"column:password_salt;type:varchar(255);not null"`
 	Role            UserRole       `gorm:"column:role;type:varchar(20);not null;check:role IN ('admin', 'owner')"`
-	AuthorizationID string         `gorm:"column:authorization_id;type:uuid;not null"`
+	AuthorizationID uuid.UUID         `gorm:"column:authorization_id;type:uuid;not null"`
 	Chargers        []ChargerDB    `gorm:"foreignKey:OwnerID;references:ID;constraint:OnDelete:RESTRICT"`
 	Locations       []LocationDB   `gorm:"foreignKey:OwnerID;references:ID;constraint:OnDelete:RESTRICT"`
 	AuditLogs       []AuditLogDB   `gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:RESTRICT"`
@@ -40,5 +40,6 @@ func (UserDB) TableName() string {
 func NewUserDB() *UserDB {
 	return &UserDB{
 		ID: uuid.New(),
+		AuthorizationID: uuid.New(),
 	}
 }

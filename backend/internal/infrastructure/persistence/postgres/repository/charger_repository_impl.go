@@ -20,7 +20,7 @@ func NewChargerRepository(db interface{}) *ChargerRepositoryImpl {
 }
 
 // Create creates a charger with connectors in a transaction
-func (r *ChargerRepositoryImpl) Create(ctx context.Context, chargerDB *models.ChargerDB, connectorsDB []models.ConnectorDB) error {
+func (r *ChargerRepositoryImpl) Create(ctx context.Context, chargerDB *models.ChargerDB, connectorsDB []*models.ConnectorDB) error {
 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		// Create charger
 		if err := tx.Create(chargerDB).Error; err != nil {

@@ -60,21 +60,21 @@ func (h *RegisterUserHandler) Handle(ctx context.Context, cmd *RegisterUserComma
 	user := model.NewUser(cmd.Request.Email, passwordHash, passwordSalt, model.RoleOwner)
 
 	// 4. Convert to database model
-	userDB := &models.UserDB{
-		ID:              user.ID,
-		Email:           user.Email,
-		PasswordHash:    user.PasswordHash,
-		PasswordSalt:    user.PasswordSalt,
-		Role:            models.UserRole(user.Role),
-		AuthorizationID: user.AuthorizationID.String(),
-		CreatedAt:       user.CreatedAt,
-		UpdatedAt:       user.UpdatedAt,
-	}
-
+	userDB := models.NewUserDB()
+	userDB.Email = user.Email
+	userDB.PasswordHash = user.PasswordHash
+	userDB.PasswordSalt = user.PasswordSalt
+	userDB.Role = models.UserRole(user.Role)
+	
 	// 5. Save to repository
 	if err := h.userRepo.Save(ctx, userDB); err != nil {
 		return nil, err
 	}
+
+	user.ID = userDB.ID
+	user.AuthorizationID = userDB.AuthorizationID
+	user.CreatedAt = userDB.CreatedAt
+	user.UpdatedAt = userDB.UpdatedAt
 
 	// 6. Return domain user
 	return user, nil

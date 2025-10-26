@@ -29,14 +29,10 @@ type User struct {
 // NewUser creates a new user entity
 func NewUser(email string, passwordHash, passwordSalt string, role UserRole) *User {
 	return &User{
-		ID:              uuid.New(),
 		Email:           email,
 		PasswordHash:    passwordHash,
 		PasswordSalt:    passwordSalt,
 		Role:            role,
-		AuthorizationID: uuid.New(),
-		CreatedAt:       time.Now(),
-		UpdatedAt:       time.Now(),
 	}
 }
 
