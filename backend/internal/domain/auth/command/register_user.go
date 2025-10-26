@@ -65,7 +65,7 @@ func (h *RegisterUserHandler) Handle(ctx context.Context, cmd *RegisterUserComma
 	userDB.PasswordHash = user.PasswordHash
 	userDB.PasswordSalt = user.PasswordSalt
 	userDB.Role = models.UserRole(user.Role)
-	
+
 	// 5. Save to repository
 	if err := h.userRepo.Save(ctx, userDB); err != nil {
 		return nil, err
