@@ -5,6 +5,7 @@ import (
 	"context"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 // ChargerRepositoryImpl implements ChargerRepository interface using PostgreSQL
@@ -20,16 +21,16 @@ func NewChargerRepository(db interface{}) *ChargerRepositoryImpl {
 }
 
 // Create creates a charger with connectors in a transaction
-func (r *ChargerRepositoryImpl) Create(ctx context.Context, chargerDB *models.ChargerDB, connectorsDB []*models.ConnectorDB) error {
+func (r *ChargerRepositoryImpl) Create(ctx context.Context, chargerDB *models.ChargerDB) error {
 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		// Create charger
-		if err := tx.Create(chargerDB).Error; err != nil {
+		if err := tx.Omit(clause.Associations).Create(chargerDB).Error; err != nil {
 			return err
 		}
 
 		// Create connectors if any
-		if len(connectorsDB) > 0 {
-			if err := tx.Create(&connectorsDB).Error; err != nil {
+		if len(chargerDB.Connectors) > 0 {
+			if err := tx.Create(chargerDB.Connectors).Error; err != nil {
 				return err
 			}
 		}

@@ -50,6 +50,7 @@ func NewConnector(
 ) *Connector {
 	now := time.Now()
 	return &Connector{
+		ID:                uuid.New(),
 		ChargerID:         chargerID,
 		ConnectorID:       connectorID,
 		Power:             power,

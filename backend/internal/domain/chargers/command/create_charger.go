@@ -54,7 +54,7 @@ func (h *CreateChargerHandler) Handle(ctx context.Context, cmd *CreateChargerCom
 	charger := model.NewCharger(cmd.Request.Vendor, cmd.Request.Model, cmd.Request.SerialNumber, cmd.OwnerID)
 
 	// 3. Prepare DB model charger
-	chargerDB := models.NewChargerDB()
+	chargerDB := &models.ChargerDB{}
 	chargerDB.ID = charger.ID
 	chargerDB.Vendor = charger.Vendor
 	chargerDB.Model = charger.Model
@@ -63,10 +63,9 @@ func (h *CreateChargerHandler) Handle(ctx context.Context, cmd *CreateChargerCom
 	chargerDB.Version = charger.Version
 
 	// 4. Add connectors to charger aggregate and prepare DB model connectors
-	connectorsDB := make([]*models.ConnectorDB, len(charger.Connectors))
 	for _, connectorReq := range cmd.Request.Connectors {
 		connector := model.NewConnector(
-			chargerDB.ID,
+			charger.ID,
 			connectorReq.ConnectorID,
 			float32(connectorReq.Power),
 			connectorReq.Voltage,
@@ -77,23 +76,17 @@ func (h *CreateChargerHandler) Handle(ctx context.Context, cmd *CreateChargerCom
 		if err := charger.AddConnector(*connector); err != nil {
 			return nil, err
 		}
-		connectorDB, err := h.addConnectorHandler.HandleInternal(chargerDB.ID, *connector)
+		connectorDB, err := h.addConnectorHandler.HandleInternal(charger.ID, *connector)
 		if err != nil {
 			return nil, err
 		}
-		connectorsDB = append(connectorsDB, connectorDB)
-		connector.ID = connectorDB.ID
+		chargerDB.Connectors = append(chargerDB.Connectors, *connectorDB)
 	}
 
 	// 5. Save in transaction
-	if err := h.chargerRepo.Create(ctx, chargerDB, connectorsDB); err != nil {
+	if err := h.chargerRepo.Create(ctx, chargerDB); err != nil {
 		return nil, err
 	}
-
-	charger.ID = chargerDB.ID
-	charger.CreatedAt = chargerDB.CreatedAt
-	charger.UpdatedAt = chargerDB.UpdatedAt
-	charger.Version = chargerDB.Version
 
 	return &charger.ID, nil
 }

@@ -7,6 +7,6 @@ import (
 
 // ChargerRepository defines the interface for charger repository
 type ChargerRepository interface {
-	Create(ctx context.Context, chargerDB *models.ChargerDB, connectorsDB []*models.ConnectorDB) error
+	Create(ctx context.Context, chargerDB *models.ChargerDB) error
 	ExistsByVendorAndSerial(ctx context.Context, vendor, serialNumber string) (bool, error)
 }

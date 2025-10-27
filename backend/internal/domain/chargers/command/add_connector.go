@@ -44,7 +44,9 @@ func (h *AddConnectorHandler) HandleInternal(chargerID uuid.UUID, connector mode
 	}
 
 	// Map domain -> DB
-	connectorDB := models.NewConnectorDB()
+	// connectorDB := models.NewConnectorDB()
+	connectorDB := &models.ConnectorDB{}
+	connectorDB.ID = connector.ID
 	connectorDB.ChargerID = chargerID
 	connectorDB.ConnectorID = connector.ConnectorID
 	connectorDB.Power = float64(connector.Power)

@@ -35,6 +35,7 @@ type Charger struct {
 func NewCharger(vendor, model, serialNumber string, ownerID uuid.UUID) *Charger {
 	now := time.Now()
 	return &Charger{
+		ID:           uuid.New(),
 		Vendor:       vendor,
 		Model:        model,
 		SerialNumber: serialNumber,
