@@ -8,7 +8,8 @@ alwaysApply: false
 ## Tech Stack
 
 - Angular 20
-- Tailwind 4
+- PrimeNG 21
+- PrimeIcons 7
 
 ## Coding practices
 
@@ -42,12 +43,13 @@ alwaysApply: false
 
 ### Guidelines for Styling
 
-#### Tailwind
+#### PrimeNG
 
-- Use the @layer directive to organize styles into components, utilities, and base layers
-- Use arbitrary values with square brackets (e.g., w-[123px]) for precise one-off designs
-- Implement the Tailwind configuration file for customizing theme, plugins, and variants
-- Leverage the theme() function in CSS for accessing Tailwind theme values
-- Implement dark mode with the dark: variant
-- Use responsive variants (sm:, md:, lg:, etc.) for adaptive designs
-- Leverage state variants (hover:, focus:, active:, etc.) for interactive elements
+- Use PrimeNG components for UI elements (buttons, forms, data tables, etc.)
+- Leverage PrimeIcons for consistent iconography throughout the application
+- Utilize the Aura theme preset with providePrimeNG() in app.config.ts
+- Implement dark mode by toggling the `.p-dark` class on the `<html>` element
+- Use CSS variables for customizing component styles (e.g., `--p-primary-color`)
+- Take advantage of the theme API for dynamic theme switching
+- Follow PrimeNG's component API documentation for styling options
+- Use ripple effects and animations consistently for better UX
