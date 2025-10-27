@@ -5,7 +5,7 @@ Backend:
 - Written in use DDD Clean Architecture + CQRS
 
 Frontend:
-- SPA w Angular 20 z TailwindCSS
+- SPA w Angular 20 z PrimeNG
 
 Baza danych:
 - PostgreSQL

@@ -29,7 +29,7 @@ Backend:
 - GORM do obsługi bazy danych
 
 Frontend:
-- SPA w Angular 20 z TailwindCSS
+- SPA w Angular 20 z PrimeNG
 
 Baza danych:
 - PostgreSQL
