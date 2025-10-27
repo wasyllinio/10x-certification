@@ -236,7 +236,7 @@ make all
 make install-tools
 
 # Lub ręcznie
-curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
+curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/main/install.sh | sh -s -- -b $(go env GOPATH)/bin
 ```
 
 **Problem:** VS Code nie pokazuje błędów z golangci-lint

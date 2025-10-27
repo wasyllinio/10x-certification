@@ -69,7 +69,7 @@ build: ## Build the application
 
 run: ## Run the application
 	@echo "$(CYAN)Running application...$(NC)"
-	@go run ./cmd/api/main.go
+	@go run -tags viper_bind_struct ./cmd/api/main.go
 
 # Aliases for common workflows
 ci: check ## Run CI checks (lint + vet + test)
