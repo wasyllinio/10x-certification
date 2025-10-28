@@ -157,7 +157,7 @@ EV Chargers Management System jest Single Page Application (SPA) zaprojektowanym
 #### /chargers/:id
 - **Cel**: Szczegóły pojedynczej stacji z możliwością edycji i zarządzania connectorami
 - **Kluczowe informacje**:
-  - Breadcrumbs: "Stacje > [Vendor] [Model]"
+  - Breadcrumbs: "Stacje > [Vendor] [Model] [SerialNumber]"
   - Podstawowe dane stacji (read-only z możliwością przejścia do edycji)
   - Lista wszystkich connectorów z szczegółami
   - Status i przypisanie do lokalizacji
