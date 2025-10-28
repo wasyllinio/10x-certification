@@ -16,12 +16,11 @@ type LocationListItemResponse struct {
 	ChargersCount int       `json:"chargers_count"`
 	EVSECount     int       `json:"evse_count"`
 	ID            uuid.UUID `json:"id"`
-	OwnerID       uuid.UUID `json:"owner_id"`
 }
 
 // NewLocationListItemResponse creates a new LocationListItemResponse from domain Location
 func NewLocationListItemResponse(
-	id, ownerID uuid.UUID,
+	id uuid.UUID,
 	name, address, countryCode string,
 	chargersCount, evseCount int,
 	createdAt, updatedAt time.Time,
@@ -31,7 +30,6 @@ func NewLocationListItemResponse(
 		Name:          name,
 		Address:       address,
 		CountryCode:   countryCode,
-		OwnerID:       ownerID,
 		ChargersCount: chargersCount,
 		EVSECount:     evseCount,
 		CreatedAt:     createdAt,

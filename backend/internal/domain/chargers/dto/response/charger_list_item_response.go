@@ -13,17 +13,14 @@ type ChargerListItemResponse struct {
 	Vendor       string                              `json:"vendor"`
 	Model        string                              `json:"model"`
 	SerialNumber string                              `json:"serial_number"`
-	Status       string                              `json:"status"`
 	Connectors   []*ChargerListItemConnectorResponse `json:"connectors"`
 	ID           uuid.UUID                           `json:"id"`
-	OwnerID      uuid.UUID                           `json:"owner_id"`
 }
 
 // NewChargerListItemResponse creates a new ChargerListItemResponse from domain Charger
 func NewChargerListItemResponse(
 	id uuid.UUID,
-	vendor, model, serialNumber, status string,
-	ownerID uuid.UUID,
+	vendor, model, serialNumber string,
 	locationID *uuid.UUID,
 	connectors []*ChargerListItemConnectorResponse,
 	createdAt time.Time,
@@ -33,8 +30,6 @@ func NewChargerListItemResponse(
 		Vendor:       vendor,
 		Model:        model,
 		SerialNumber: serialNumber,
-		OwnerID:      ownerID,
-		Status:       status,
 		LocationID:   locationID,
 		Connectors:   connectors,
 		CreatedAt:    createdAt,

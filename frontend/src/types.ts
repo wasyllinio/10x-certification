@@ -101,21 +101,16 @@ export interface ChargerListItem {
   vendor: string;
   model: string;
   serial_number: string;
-  owner_id: string;
   location_id: string | null;
-  status: Status;
   connectors: ChargerListItemConnector[];
   created_at: Date;
 }
 
 export interface ChargerDetailResponse {
-  id: string;
   vendor: string;
   model: string;
   serial_number: string;
-  owner_id: string;
   location_id: string | null;
-  status: Status;
   connectors: ConnectorResponse[];
   created_at: Date;
 }
@@ -178,7 +173,6 @@ export interface LocationListItem {
   name: string;
   address: string;
   country_code: string;
-  owner_id: string;
   chargers_count: number;
   evse_count: number;
   created_at: Date;
@@ -186,13 +180,14 @@ export interface LocationListItem {
 }
 
 export interface LocationDetailResponse {
-  id: string;
   name: string;
   address: string;
   country_code: string;
   version: number;
   chargers: LocationChargerResponse[];
   evses: EvseResponse[];
+  created_at: Date;
+  updated_at: Date;
 }
 
 export interface LocationListResponse {

@@ -81,9 +81,7 @@
       "vendor": "Tesla",
       "model": "Supercharger V3",
       "serial_number": "TS001",
-      "owner_id": "uuid",
       "location_id": "uuid", // nullable
-      "status": "assigned",
       "connectors": [
         {
           "power": 250.0,
@@ -140,6 +138,7 @@
   "model": "Supercharger V3",
   "serial_number": "TS001",
   "location_id": "uuid", // nullable
+  "created_at": "2025-01-01T00:00:00Z",
   "connectors": [
     {
       "id": "uuid",
@@ -222,7 +221,6 @@
       "name": "Downtown Charging Hub",
       "address": "123 Main St, City",
       "country_code": "USA",
-      "owner_id": "uuid",
       "chargers_count": 5,
       "evse_count": 10,
       "created_at": "2025-01-01T00:00:00Z",
@@ -261,6 +259,8 @@
   "address": "New Address",
   "country_code": "USA",
   "version": 1,
+  "created_at": "2025-01-01T00:00:00Z",
+  "updated_at": "2025-01-01T00:00:00Z",
   "chargers": [
     {
       "id": "uuid",
