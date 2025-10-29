@@ -54,6 +54,54 @@ ng e2e
 
 Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
 
+## Styling System
+
+This project uses **PrimeNG** and **PrimeFlex** for UI components and styling:
+
+### PrimeNG (v20.2.0)
+- Comprehensive component library with 100+ components
+- Fully configured and themed in `app.config.ts`
+- CSS-in-JS theming system with Aura preset
+
+### PrimeFlex (v4.0.0)
+- Utility-first CSS framework
+- Provides spacing, layout, and utility classes
+- Imported in `styles.css` and ready to use
+
+### Usage Examples
+
+**PrimeNG Component:**
+```html
+<p-button label="Click me" icon="pi pi-check"></p-button>
+```
+
+**PrimeFlex Utilities:**
+```html
+<!-- Spacing -->
+<div class="p-m-3 p-p-4">Margins and padding</div>
+
+<!-- Flexbox Layout -->
+<div class="flex align-items-center justify-content-between gap-3">
+  <span>Left content</span>
+  <span>Right content</span>
+</div>
+
+<!-- Responsive -->
+<div class="grid">
+  <div class="col-12 md:col-6 lg:col-4">Content</div>
+</div>
+```
+
+### Custom Design System
+
+Additional custom utilities are available in:
+- `src/app/shared/styles/design-system.css` - Typography, spacing, elevation
+- `src/app/shared/styles/cards.css` - Card components
+- `src/app/shared/styles/components.css` - Enhanced PrimeNG components
+- `src/app/shared/styles/utilities.css` - Additional utilities
+
 ## Additional Resources
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- [Angular CLI Documentation](https://angular.dev/tools/cli)
+- [PrimeNG Documentation](https://primeng.org/)
+- [PrimeFlex Documentation](https://primeflex.org/)

@@ -1,12 +1,9 @@
-import { Component, signal } from '@angular/core';
-import { ButtonModule } from 'primeng/button';
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [ButtonModule],
-  templateUrl: './app.html',
-  styleUrl: './app.css'
+  imports: [RouterOutlet],
+  template: '<router-outlet></router-outlet>'
 })
-export class App {
-  protected readonly title = signal('10x-certification');
-}
+export class App {}

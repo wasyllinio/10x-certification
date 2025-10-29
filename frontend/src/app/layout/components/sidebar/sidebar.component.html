@@ -1,0 +1,41 @@
+<nav class="sidebar" [class.collapsed]="collapsed" role="navigation" aria-label="Main navigation">
+  <div class="sidebar-header">
+    <div class="logo-wrapper">
+      <div class="logo-icon">
+        <i class="pi pi-plug"></i>
+      </div>
+      @if (!collapsed) {
+        <h2 class="logo-text">ECMS</h2>
+      }
+    </div>
+    
+    <p-button 
+      [icon]="collapsed ? 'pi pi-angle-right' : 'pi pi-angle-left'"
+      [rounded]="true"
+      [text]="true"
+      [severity]="'secondary'"
+      (onClick)="toggleCollapse.emit()"
+      class="toggle-button"
+      [attr.aria-label]="collapsed ? 'Expand sidebar' : 'Collapse sidebar'"
+      [attr.aria-expanded]="!collapsed"
+      type="button">
+    </p-button>
+  </div>
+  
+  <p-menu [model]="menuItems" [styleClass]="collapsed ? 'menu-icons-only' : 'menu-full'"></p-menu>
+  
+  <div class="sidebar-footer">
+    <div class="footer-user">
+      <div class="user-avatar">
+        <i class="pi pi-user"></i>
+      </div>
+      @if (!collapsed) {
+        <div class="user-info">
+          <div class="user-name">Admin</div>
+          <div class="user-email">admin@ecms.pl</div>
+        </div>
+      }
+    </div>
+  </div>
+</nav>
+

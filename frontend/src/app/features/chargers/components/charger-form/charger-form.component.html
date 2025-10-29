@@ -1,0 +1,274 @@
+<div class="charger-form-container">
+  <p-card [header]="isEditMode() ? 'Edytuj stację' : 'Nowa stacja'">
+    
+    <!-- Loading Spinner -->
+    @if (loading()) {
+      <div class="flex justify-content-center align-items-center py-6">
+        <p-progressSpinner></p-progressSpinner>
+      </div>
+    }
+
+    <!-- Form -->
+    @if (!loading()) {
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        
+        <!-- Basic Information -->
+        <p-fieldset legend="Podstawowe informacje" styleClass="mb-4">
+          <div class="formgrid grid">
+            <!-- Vendor -->
+            <div class="field col-12 md:col-6">
+              <label for="vendor" class="block mb-2">
+                Vendor <span class="text-red-500">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="vendor" 
+                pInputText 
+                formControlName="vendor"
+                [class.ng-invalid]="getFieldError('vendor')"
+                placeholder="np. Tesla"
+                [attr.aria-required]="true"
+                aria-describedby="vendor-error">
+              
+              @if (getFieldError('vendor')) {
+                <small id="vendor-error" class="p-error block mt-1" role="alert">
+                  {{ getFieldError('vendor') }}
+                </small>
+              }
+            </div>
+
+            <!-- Model -->
+            <div class="field col-12 md:col-6">
+              <label for="model" class="block mb-2">
+                Model <span class="text-red-500">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="model" 
+                pInputText 
+                formControlName="model"
+                [class.ng-invalid]="getFieldError('model')"
+                placeholder="np. Supercharger V3"
+                [attr.aria-required]="true"
+                aria-describedby="model-error">
+              
+              @if (getFieldError('model')) {
+                <small id="model-error" class="p-error block mt-1" role="alert">
+                  {{ getFieldError('model') }}
+                </small>
+              }
+            </div>
+
+            <!-- Serial Number -->
+            <div class="field col-12">
+              <label for="serial_number" class="block mb-2">
+                Numer seryjny <span class="text-red-500">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="serial_number" 
+                pInputText 
+                formControlName="serial_number"
+                [class.ng-invalid]="getFieldError('serial_number')"
+                placeholder="np. TS-SC-V3-0001"
+                [attr.aria-required]="true"
+                aria-describedby="serial_number-error">
+              
+              @if (getFieldError('serial_number')) {
+                <small id="serial_number-error" class="p-error block mt-1" role="alert">
+                  {{ getFieldError('serial_number') }}
+                </small>
+              }
+            </div>
+          </div>
+        </p-fieldset>
+
+        <!-- Connectors -->
+        <p-fieldset 
+          legend="Connectors ({{ connectors.length }})" 
+          styleClass="mb-4">
+          
+          <div formArrayName="connectors">
+            
+            @for (connector of connectors.controls; track $index) {
+              <div [formGroupName]="$index">
+                <p-fieldset [legend]="'Connector ' + ($index + 1)" class="mb-3">
+                  
+                  <div class="grid">
+                    <!-- Connector ID -->
+                    <div class="field col-12 md:col-6">
+                      <label [for]="'connector_id' + $index" class="block mb-2">
+                        Connector ID <span class="text-red-500">*</span>
+                      </label>
+                      <p-inputNumber 
+                        [id]="'connector_id' + $index"
+                        formControlName="connector_id"
+                        [showButtons]="true"
+                        [min]="1"
+                        [max]="999"
+                        styleClass="w-full">
+                      </p-inputNumber>
+                      @if (getConnectorFieldError($index, 'connector_id')) {
+                        <small class="p-error block mt-1">
+                          {{ getConnectorFieldError($index, 'connector_id') }}
+                        </small>
+                      }
+                    </div>
+
+                    <!-- Power -->
+                    <div class="field col-12 md:col-6">
+                      <label [for]="'power' + $index" class="block mb-2">
+                        Power (kW) <span class="text-red-500">*</span>
+                      </label>
+                      <p-inputNumber 
+                        [id]="'power' + $index"
+                        formControlName="power"
+                        [useGrouping]="false"
+                        [minFractionDigits]="0"
+                        [maxFractionDigits]="1"
+                        styleClass="w-full">
+                      </p-inputNumber>
+                      @if (getConnectorFieldError($index, 'power')) {
+                        <small class="p-error block mt-1">
+                          {{ getConnectorFieldError($index, 'power') }}
+                        </small>
+                      }
+                    </div>
+
+                    <!-- Voltage -->
+                    <div class="field col-12 md:col-6">
+                      <label [for]="'voltage' + $index" class="block mb-2">
+                        Voltage (V) <span class="text-red-500">*</span>
+                      </label>
+                      <p-inputNumber 
+                        [id]="'voltage' + $index"
+                        formControlName="voltage"
+                        [showButtons]="true"
+                        styleClass="w-full">
+                      </p-inputNumber>
+                      @if (getConnectorFieldError($index, 'voltage')) {
+                        <small class="p-error block mt-1">
+                          {{ getConnectorFieldError($index, 'voltage') }}
+                        </small>
+                      }
+                    </div>
+
+                    <!-- Amperage -->
+                    <div class="field col-12 md:col-6">
+                      <label [for]="'amperage' + $index" class="block mb-2">
+                        Amperage (A) <span class="text-red-500">*</span>
+                      </label>
+                      <p-inputNumber 
+                        [id]="'amperage' + $index"
+                        formControlName="amperage"
+                        [useGrouping]="false"
+                        [minFractionDigits]="0"
+                        [maxFractionDigits]="1"
+                        styleClass="w-full">
+                      </p-inputNumber>
+                      @if (getConnectorFieldError($index, 'amperage')) {
+                        <small class="p-error block mt-1">
+                          {{ getConnectorFieldError($index, 'amperage') }}
+                        </small>
+                      }
+                    </div>
+
+                      <!-- Connector Type -->
+                    <div class="field col-12 md:col-6">
+                      <label [for]="'connector_type' + $index" class="block mb-2">
+                        Connector Type <span class="text-red-500">*</span>
+                      </label>
+                      <p-select 
+                        [id]="'connector_type' + $index"
+                        formControlName="connector_type"
+                        [options]="connectorTypeOptions"
+                        optionLabel="label"
+                        optionValue="value"
+                        placeholder="Select type"
+                        styleClass="w-full">
+                      </p-select>
+                      @if (getConnectorFieldError($index, 'connector_type')) {
+                        <small class="p-error block mt-1">
+                          {{ getConnectorFieldError($index, 'connector_type') }}
+                        </small>
+                      }
+                    </div>
+
+                    <!-- Connector Standard -->
+                    <div class="field col-12 md:col-6">
+                      <label [for]="'connector_standard' + $index" class="block mb-2">
+                        Connector Standard <span class="text-red-500">*</span>
+                      </label>
+                      <p-select 
+                        [id]="'connector_standard' + $index"
+                        formControlName="connector_standard"
+                        [options]="connectorStandardOptions"
+                        optionLabel="label"
+                        optionValue="value"
+                        placeholder="Select standard"
+                        styleClass="w-full">
+                      </p-select>
+                      @if (getConnectorFieldError($index, 'connector_standard')) {
+                        <small class="p-error block mt-1">
+                          {{ getConnectorFieldError($index, 'connector_standard') }}
+                        </small>
+                      }
+                    </div>
+
+                    <!-- Remove Button -->
+                    <div class="field col-12">
+                      @if (connectors.length > 1) {
+                        <p-button 
+                          label="Usuń connector" 
+                          icon="pi pi-trash"
+                          severity="danger"
+                          [text]="true"
+                          (click)="removeConnector($index)">
+                        </p-button>
+                      }
+                    </div>
+                  </div>
+                </p-fieldset>
+              </div>
+            }
+          </div>
+
+          <!-- Add Connector Button -->
+          <div class="flex justify-content-end mt-3" role="group" aria-label="Dodawanie connectora">
+            <p-button 
+              label="Dodaj connector" 
+              icon="pi pi-plus"
+              [outlined]="true"
+              (click)="addConnector()"
+              type="button"
+              aria-label="Dodaj nowy connector">
+            </p-button>
+          </div>
+        </p-fieldset>
+
+        <!-- Form Actions -->
+        <div class="flex justify-content-end gap-2 mt-4" role="group" aria-label="Akcje formularza">
+          <p-button 
+            label="Anuluj" 
+            severity="secondary"
+            [outlined]="true"
+            (click)="cancel()"
+            type="button"
+            aria-label="Anuluj i wróć">
+          </p-button>
+          <p-button 
+            [label]="isEditMode() ? 'Zapisz zmiany' : 'Utwórz stację'" 
+            icon="pi pi-check"
+            type="submit"
+            [disabled]="loading()"
+            [attr.aria-label]="(isEditMode() ? 'Zapisz zmiany w stacji' : 'Utwórz nową stację') + (loading() ? ' - ładowanie' : '')">
+          </p-button>
+        </div>
+      </form>
+    }
+  </p-card>
+
+  <!-- Toast for messages -->
+  <p-toast></p-toast>
+</div>
+

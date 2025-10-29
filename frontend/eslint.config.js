@@ -21,6 +21,18 @@ export default [
       },
       globals: {
         console: 'readonly',
+        window: 'readonly',
+        document: 'readonly',
+        localStorage: 'readonly',
+        sessionStorage: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
+        atob: 'readonly',
+        btoa: 'readonly',
+        XMLHttpRequest: 'readonly',
+        Event: 'readonly',
       },
     },
     plugins: {

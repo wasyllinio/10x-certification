@@ -1,0 +1,201 @@
+<div class="charger-detail-container">
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="flex justify-content-center align-items-center py-6">
+      <p-progressSpinner></p-progressSpinner>
+    </div>
+  }
+
+  <!-- Charger Details -->
+  @if (!loading() && charger()) {
+    <div class="grid">
+      <!-- Main Information Card -->
+      <div class="col-12">
+        <p-card>
+          <div class="flex justify-content-between align-items-start mb-3">
+            <div>
+              <h2 class="m-0">
+                {{ charger()?.vendor }} {{ charger()?.model }}
+              </h2>
+              <p class="text-500 mt-2 mb-0">
+                Numer seryjny: {{ charger()?.serial_number }}
+              </p>
+            </div>
+            <div class="flex gap-2" role="group" aria-label="Akcje stacji">
+              <p-button 
+                label="Edytuj" 
+                icon="pi pi-pencil"
+                (click)="editCharger()"
+                type="button"
+                aria-label="Edytuj stację">
+              </p-button>
+              <p-button 
+                label="Usuń" 
+                icon="pi pi-trash"
+                severity="danger"
+                (click)="deleteCharger()"
+                type="button"
+                aria-label="Usuń stację">
+              </p-button>
+            </div>
+          </div>
+
+          <!-- Status and Location Info -->
+          <div class="grid">
+            <div class="col-12 md:col-6">
+              <p class="m-0 mb-2">
+                <strong>Status:</strong>
+                <span 
+                  class="p-badge ml-2"
+                  [class]="'p-badge-' + getStatusSeverity()">
+                  {{ getStatusLabel() }}
+                </span>
+              </p>
+            </div>
+            <div class="col-12 md:col-6">
+              <p class="m-0 mb-2">
+                <strong>Data utworzenia:</strong>
+                <span class="ml-2">
+                  {{ charger()?.created_at | date: 'dd.MM.yyyy HH:mm' }}
+                </span>
+              </p>
+            </div>
+          </div>
+        </p-card>
+      </div>
+
+      <!-- Connectors Table -->
+      <div class="col-12">
+        <p-card header="Connectors" [subheader]="'Liczba connectorów: ' + (charger()?.connectors?.length || 0)">
+          <p-table 
+            [value]="charger()?.connectors || []" 
+            styleClass="p-datatable-sm"
+            ariaLabel="Lista connectorów">
+            
+            <!-- Table Headers -->
+            <ng-template pTemplate="header">
+              <tr role="row">
+                <th role="columnheader" style="width: 5%"></th>
+                <th role="columnheader" style="width: 15%">Connector ID</th>
+                <th role="columnheader" style="width: 12%">Power (kW)</th>
+                <th role="columnheader" style="width: 12%">Voltage (V)</th>
+                <th role="columnheader" style="width: 12%">Amperage (A)</th>
+                <th role="columnheader" style="width: 14%">Type</th>
+                <th role="columnheader" style="width: 14%">Standard</th>
+                <th role="columnheader" style="width: 12%">ID</th>
+              </tr>
+            </ng-template>
+
+            <!-- Table Body -->
+            <ng-template pTemplate="body" let-connector let-index="rowIndex">
+              <tr role="row">
+                <!-- Expand Button -->
+                <td role="gridcell">
+                  <p-button 
+                    [icon]="isRowExpanded(index) ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"
+                    [text]="true"
+                    size="small"
+                    (click)="toggleRow(index)"
+                    [attr.aria-label]="'Rozwiń szczegóły connectora ' + connector.connector_id"
+                    [attr.aria-expanded]="isRowExpanded(index)"
+                    type="button">
+                  </p-button>
+                </td>
+                
+                <!-- Basic Info -->
+                <td role="gridcell">{{ connector.connector_id }}</td>
+                <td role="gridcell">{{ connector.power }}</td>
+                <td role="gridcell">{{ connector.voltage }}</td>
+                <td role="gridcell">{{ connector.amperage }}</td>
+                <td role="gridcell">{{ connector.connector_type | connectorType }}</td>
+                <td role="gridcell">{{ connector.connector_standard | connectorStandard }}</td>
+                <td role="gridcell">
+                  <span class="p-badge">{{ connector.id }}</span>
+                </td>
+              </tr>
+
+              <!-- Expanded Details Row -->
+              @if (isRowExpanded(index)) {
+                <tr>
+                  <td colspan="8">
+                    <p-panel>
+                      <div class="grid">
+                        <div class="col-12 md:col-4">
+                          <p class="m-0 mb-2">
+                            <strong>Connector ID:</strong> {{ connector.connector_id }}
+                          </p>
+                        </div>
+                        <div class="col-12 md:col-4">
+                          <p class="m-0 mb-2">
+                            <strong>Power:</strong> {{ connector.power }} kW
+                          </p>
+                        </div>
+                        <div class="col-12 md:col-4">
+                          <p class="m-0 mb-2">
+                            <strong>Voltage:</strong> {{ connector.voltage }} V
+                          </p>
+                        </div>
+                        <div class="col-12 md:col-4">
+                          <p class="m-0 mb-2">
+                            <strong>Amperage:</strong> {{ connector.amperage }} A
+                          </p>
+                        </div>
+                        <div class="col-12 md:col-4">
+                          <p class="m-0 mb-2">
+                            <strong>Type:</strong> {{ connector.connector_type | connectorType }}
+                          </p>
+                        </div>
+                        <div class="col-12 md:col-4">
+                          <p class="m-0 mb-2">
+                            <strong>Standard:</strong> {{ connector.connector_standard | connectorStandard }}
+                          </p>
+                        </div>
+                      </div>
+                    </p-panel>
+                  </td>
+                </tr>
+              }
+            </ng-template>
+
+            <!-- Empty State -->
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="8" class="text-center py-6">
+                  <div class="flex flex-column align-items-center gap-3">
+                    <i class="pi pi-plug text-5xl text-400"></i>
+                    <h3 class="m-0 text-500">Brak connectorów</h3>
+                    <p-button 
+                      label="Dodaj connector" 
+                      icon="pi pi-plus"
+                      (click)="editCharger()">
+                    </p-button>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </p-card>
+      </div>
+    </div>
+  }
+
+  <!-- Not Found State -->
+  @if (!loading() && !charger()) {
+    <p-card>
+      <div class="flex flex-column align-items-center gap-3">
+        <i class="pi pi-exclamation-triangle text-6xl text-400"></i>
+        <h2 class="m-0 text-500">Stacja nie została znaleziona</h2>
+        <p-button 
+          label="Wróć do listy" 
+          icon="pi pi-arrow-left"
+          (click)="goToList()">
+        </p-button>
+      </div>
+    </p-card>
+  }
+
+  <!-- Toast and Confirm Dialog -->
+  <p-toast></p-toast>
+  <p-confirmDialog></p-confirmDialog>
+</div>
+

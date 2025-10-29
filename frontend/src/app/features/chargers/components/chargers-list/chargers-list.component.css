@@ -1,0 +1,57 @@
+.chargers-list-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Page Header */
+.page-header {
+  margin-bottom: 1.5rem;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--p-text-color);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.02em;
+}
+
+.page-title i {
+  color: var(--p-primary-color);
+  font-size: 2rem;
+}
+
+/* Card Toolbar Styling */
+::ng-deep p-card p-toolbar {
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+::ng-deep p-card .p-card-body {
+  padding: 1.5rem;
+}
+
+/* Table Wrapper Styling */
+::ng-deep p-card p-table .p-datatable {
+  border: none;
+  box-shadow: none;
+}
+
+::ng-deep p-card p-table .p-datatable-wrapper {
+  padding: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .page-title {
+    font-size: 1.5rem;
+  }
+  
+  .page-title i {
+    font-size: 1.5rem;
+  }
+}
+

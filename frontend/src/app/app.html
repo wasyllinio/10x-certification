@@ -1,17 +1,99 @@
-<div class="min-h-screen flex items-center justify-center bg-surface-100 p-4">
-  <div class="flex flex-col items-center gap-6 p-8 bg-surface-card rounded-lg shadow-lg border border-surface-border">
-    <h1 class="text-6xl font-bold text-primary text-center mb-4">
-      10x Certification
-    </h1>
-    <p class="text-surface-600 text-center text-lg">
-      Welcome to the 10x Certification Platform
-    </p>
-    <p-button 
-      label="Get Started" 
-      [rounded]="true" 
-      severity="primary"
-      size="large"
-      icon="pi pi-arrow-right">
-    </p-button>
+<div class="hero-container">
+  <div class="hero-content">
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <div class="hero-badge">
+        <i class="pi pi-check-circle"></i>
+        <span>Platform v2.0</span>
+      </div>
+      
+      <h1 class="hero-title">
+        Welcome to
+        <span class="gradient-text">10x Certification</span>
+      </h1>
+      
+      <p class="hero-description">
+        Manage your EV charging infrastructure with enterprise-grade tools and insights.
+        Monitor, analyze, and optimize your charging station network.
+      </p>
+      
+      <div class="hero-actions">
+        <p-button 
+          label="Get Started" 
+          icon="pi pi-arrow-right"
+          iconPos="right"
+          size="large">
+        </p-button>
+        <p-button 
+          label="View Documentation" 
+          [text]="true"
+          severity="secondary"
+          size="large"
+          icon="pi pi-book">
+        </p-button>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="card card-stat">
+        <div class="stat-icon">
+          <i class="pi pi-charging-station"></i>
+        </div>
+        <div class="stat-value">150+</div>
+        <div class="stat-label">Charging Stations</div>
+      </div>
+      
+      <div class="card card-stat">
+        <div class="stat-icon">
+          <i class="pi pi-map-marker"></i>
+        </div>
+        <div class="stat-value">45</div>
+        <div class="stat-label">Locations</div>
+      </div>
+      
+      <div class="card card-stat">
+        <div class="stat-icon">
+          <i class="pi pi-bolt"></i>
+        </div>
+        <div class="stat-value">98.5%</div>
+        <div class="stat-label">Uptime</div>
+      </div>
+      
+      <div class="card card-stat">
+        <div class="stat-icon">
+          <i class="pi pi-users"></i>
+        </div>
+        <div class="stat-value">12.5K</div>
+        <div class="stat-label">Monthly Sessions</div>
+      </div>
+    </div>
+
+    <!-- Feature Cards -->
+    <div class="features-grid">
+      <div class="card card-feature">
+        <div class="feature-icon">
+          <i class="pi pi-chart-line"></i>
+        </div>
+        <h3>Real-time Analytics</h3>
+        <p>Monitor charging activity, energy consumption, and performance metrics in real-time.</p>
+      </div>
+      
+      <div class="card card-feature">
+        <div class="feature-icon">
+          <i class="pi pi-cog"></i>
+        </div>
+        <h3>Smart Management</h3>
+        <p>Automate scheduling, load balancing, and maintenance tasks with intelligent algorithms.</p>
+      </div>
+      
+      <div class="card card-feature">
+        <div class="feature-icon">
+          <i class="pi pi-shield"></i>
+        </div>
+        <h3>Enterprise Security</h3>
+        <p>Bank-grade encryption and compliance with industry standards for data protection.</p>
+      </div>
+    </div>
   </div>
 </div>

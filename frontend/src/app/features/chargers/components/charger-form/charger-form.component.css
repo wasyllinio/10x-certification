@@ -1,0 +1,55 @@
+.charger-form-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Form field labels */
+label {
+  font-weight: 500;
+}
+
+/* Form grid spacing */
+.formgrid .field {
+  margin-bottom: 1rem;
+}
+
+/* Fieldset spacing */
+p-fieldset {
+  margin-bottom: 1.5rem;
+}
+
+/* Connector fieldset styling */
+p-fieldset p-fieldset {
+  margin-bottom: 1rem;
+  border: 1px solid var(--p-surface-border);
+  border-radius: var(--p-border-radius);
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .charger-form-container {
+    padding: 0.5rem;
+  }
+
+  .formgrid .field {
+    margin-bottom: 0.75rem;
+  }
+}
+
+/* Error message styling */
+.p-error {
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* Input invalid state */
+.ng-invalid.ng-touched {
+  border-color: var(--p-red-500);
+}
+
+/* Badge styling for connector count */
+p-fieldset[legend*="Connectors"] {
+  position: relative;
+}
+

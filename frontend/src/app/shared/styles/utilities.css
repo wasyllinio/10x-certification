@@ -1,0 +1,37 @@
+/* Custom Utility Classes - Only unique utilities not provided by PrimeNG */
+
+/* Custom text sizes */
+.text-5xl {
+  font-size: 3rem;
+}
+
+.text-6xl {
+  font-size: 3.5rem;
+}
+
+/* Custom text colors using PrimeNG variables */
+.text-400 {
+  color: var(--p-text-muted-color);
+}
+
+.text-500 {
+  color: var(--p-text-color);
+}
+
+.text-600 {
+  font-weight: 600;
+}
+
+.text-red-500 {
+  color: var(--p-red-500);
+}
+
+/* Custom width utilities */
+.w-10rem {
+  width: 10rem;
+}
+
+/* Custom container utilities */
+.min-h-300 {
+  min-height: 300px;
+}

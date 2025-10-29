@@ -1,0 +1,41 @@
+<header class="topbar" role="banner">
+  <div class="topbar-left">
+    <p-breadcrumb [model]="breadcrumbItems()" styleClass="breadcrumb-minimal"></p-breadcrumb>
+  </div>
+  
+  <div class="topbar-right">
+    <div class="notification-button-wrapper">
+      <p-button 
+        [icon]="'pi pi-bell'"
+        [rounded]="true"
+        [text]="true"
+        severity="secondary"
+        styleClass="mr-3">
+      </p-button>
+      <span class="notification-badge">3</span>
+    </div>
+    
+    <p-button 
+      [icon]="'pi pi-download'"
+      label="Download"
+      severity="primary"
+      styleClass="mr-3">
+    </p-button>
+    
+    <div class="user-menu">
+      <p-button 
+        [icon]="'pi pi-user'"
+        [rounded]="true"
+        [text]="true"
+        (click)="menu.toggle($event)"
+        aria-label="User menu"
+        aria-haspopup="true"
+        type="button"
+        class="user-avatar-button">
+      </p-button>
+      
+      <p-menu #menu [model]="userMenuItems" [popup]="true"></p-menu>
+    </div>
+  </div>
+</header>
+

@@ -1,0 +1,251 @@
+/* Global Component Styles */
+/* These styles apply to PrimeNG components across the application */
+
+/* Enhanced Table Styling */
+.p-datatable {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--p-color-border);
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+  background: linear-gradient(180deg, var(--p-color-surface-50) 0%, var(--p-color-surface-25) 100%);
+  padding: 1rem 1.25rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--p-text-color-secondary);
+  border-bottom: 2px solid var(--p-color-border);
+  white-space: nowrap;
+}
+
+.p-datatable .p-datatable-tbody > tr {
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border-bottom: 1px solid var(--p-color-border);
+}
+
+.p-datatable .p-datatable-tbody > tr:last-child {
+  border-bottom: none;
+}
+
+.p-datatable .p-datatable-tbody > tr:nth-child(even) {
+  background-color: var(--p-color-surface-25);
+}
+
+.p-datatable .p-datatable-tbody > tr:hover {
+  background-color: rgba(var(--p-primary-color-rgb), 0.08);
+  transform: scale(1.001);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+  padding: 1rem 1.25rem;
+  vertical-align: middle;
+}
+
+/* Pagination Enhancements */
+.p-datatable .p-paginator {
+  background: var(--p-color-surface-50);
+  border-top: 1px solid var(--p-color-border);
+  padding: 1rem 1.25rem;
+  border-radius: 0 0 0.75rem 0.75rem;
+}
+
+.p-datatable .p-paginator .p-paginator-pages .p-paginator-page {
+  border-radius: 0.5rem;
+  min-width: 2.5rem;
+  height: 2.5rem;
+  transition: all 0.2s ease;
+}
+
+.p-datatable .p-paginator .p-paginator-pages .p-paginator-page:hover {
+  background: rgba(var(--p-primary-color-rgb), 0.08);
+}
+
+.p-datatable .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background: linear-gradient(135deg, var(--p-primary-color) 0%, var(--p-primary-color-hover) 100%);
+  box-shadow: 0 2px 8px rgba(var(--p-primary-color-rgb), 0.3);
+}
+
+/* Badge Enhancements */
+.p-badge {
+  border-radius: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  font-weight: 500;
+  font-size: 0.75rem;
+  letter-spacing: 0.025em;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.p-badge-success {
+  background: linear-gradient(135deg, var(--p-green-500) 0%, var(--p-green-600) 100%);
+}
+
+.p-badge-warning {
+  background: linear-gradient(135deg, var(--p-amber-500) 0%, var(--p-amber-600) 100%);
+}
+
+.p-badge-danger {
+  background: linear-gradient(135deg, var(--p-red-500) 0%, var(--p-red-600) 100%);
+}
+
+.p-badge-info {
+  background: linear-gradient(135deg, var(--p-primary-color) 0%, var(--p-primary-color-hover) 100%);
+}
+
+/* Toolbar Enhancements */
+.p-toolbar {
+  background: linear-gradient(180deg, var(--p-color-surface) 0%, var(--p-color-surface-25) 100%);
+  border: 1px solid var(--p-color-border);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.p-toolbar .p-button {
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.p-toolbar .p-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Card Enhancements */
+p-card .p-card {
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+p-card .p-card:hover {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+p-card .p-card-header {
+  padding: 1.5rem 1.5rem 0;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--p-text-color);
+}
+
+p-card .p-card-body {
+  padding: 1.5rem;
+}
+
+p-card .p-card-footer {
+  padding: 1rem 1.5rem;
+  background: var(--p-color-surface-25);
+  border-radius: 0 0 0.75rem 0.75rem;
+}
+
+/* Panel Enhancements */
+p-panel .p-panel {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+p-panel .p-panel-header {
+  background: linear-gradient(180deg, var(--p-color-surface) 0%, var(--p-color-surface-25) 100%);
+  padding: 1.25rem 1.5rem;
+  font-weight: 600;
+  border-bottom: 2px solid var(--p-color-border);
+}
+
+p-panel .p-panel-content {
+  padding: 1.5rem;
+}
+
+/* Input Enhancements */
+.p-inputtext,
+.p-select,
+.p-autocomplete .p-autocomplete-input {
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.p-inputtext:focus,
+.p-select:focus,
+.p-autocomplete .p-autocomplete-input:focus {
+  border-color: var(--p-primary-color);
+  box-shadow: 0 0 0 3px rgba(var(--p-primary-color-rgb), 0.1);
+}
+
+.p-input-icon-left {
+  color: var(--p-text-color-secondary);
+}
+
+/* Button Enhancements */
+.p-button {
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.p-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.p-button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.p-button.p-button-primary {
+  background: linear-gradient(135deg, var(--p-primary-color) 0%, var(--p-primary-color-hover) 100%);
+  border: none;
+}
+
+.p-button.p-button-primary:hover {
+  background: linear-gradient(135deg, var(--p-primary-color-hover) 0%, var(--p-primary-color) 100%);
+}
+
+/* Disabled button state */
+.p-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Small datatable customizations */
+.p-datatable-sm {
+  font-size: 0.875rem;
+}
+
+.p-datatable-sm .p-datatable-thead > tr > th {
+  padding: 0.75rem;
+  font-size: 0.75rem;
+}
+
+.p-datatable-sm .p-datatable-tbody > tr > td {
+  padding: 0.75rem;
+}
+
+/* Responsive toolbar adjustments */
+@media (max-width: 768px) {
+  .p-toolbar .p-toolbar-group-end {
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .p-toolbar .p-toolbar-group-end > * {
+    width: 100%;
+  }
+  
+  .p-datatable .p-datatable-thead > tr > th,
+  .p-datatable .p-datatable-tbody > tr > td {
+    padding: 0.75rem;
+    font-size: 0.875rem;
+  }
+}
+
